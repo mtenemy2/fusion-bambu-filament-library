@@ -1,5 +1,7 @@
 # Bambu Lab Filament Library for Autodesk Fusion
 
+![Bambu Lab Filament Library for Autodesk Fusion](docs/social-preview.png)
+
 Every Bambu Lab filament in Fusion: **one appearance per official color** and **one physical material per product line** (density, modulus, strength and thermal values from Bambu's technical data sheets), added to your Fusion **Favorites**.
 The script downloads Bambu's latest official color table each time it runs, so newly released filaments show up automatically.
 

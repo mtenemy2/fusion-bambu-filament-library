@@ -194,6 +194,15 @@ def main():
                        lines_added=lines_added, materials_changed=mat_changed, notes=notes, package=zip_path),
                   f, ensure_ascii=False, indent=1)
 
+    # social preview image with current counts (needs Pillow; skipped if missing)
+    if changed:
+        try:
+            import subprocess
+            subprocess.run([sys.executable, "-I", os.path.join(TOOLS, "make_preview.py"), out_json,
+                            os.path.join(ROOT, "docs", "social-preview.png")], check=True, capture_output=True)
+        except Exception as e:
+            print("preview image not updated:", e)
+
     # 7. install on this PC
     if install and os.path.isdir(os.path.dirname(FUSION_SCRIPTS)):
         os.makedirs(FUSION_SCRIPTS, exist_ok=True)
