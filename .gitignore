@@ -1,0 +1,12 @@
+# local / maintainer-only
+LOCAL_NOTES.md
+dist/
+data/tds/
+data/filaments_color_codes.json
+data/update_report.*
+tools/pylib/
+__pycache__/
+*.pyc
+BambuFilamentLibrary/last_run_log.txt
+BambuFilamentLibrary/last_report.txt
+.vscode/

@@ -1,0 +1,343 @@
+﻿family,line,color_code,name_en,name_ko,hex,color_type,style,density,youngs_mpa,tensile_mpa,elongation_pct,hdt_045_c,nozzle_c,bed_c,drying,mech_source
+PLA,PLA Aero,14102,White,화이트,#FFFFFF,solid,matte,1.21,2150.0,26.0,2.2,54.0,210-260,35-45,,Bambu PLA Aero TDS V2.0
+PLA,PLA Aero,14103,Black,블랙,#000000,solid,matte,1.21,2150.0,26.0,2.2,54.0,210-260,35-45,,Bambu PLA Aero TDS V2.0
+PLA,PLA Aero,14104,Gray,그레이,#CDCECA,solid,matte,1.21,2150.0,26.0,2.2,54.0,210-260,35-45,,Bambu PLA Aero TDS V2.0
+PLA,PLA Basic,10100,Jade White,제이드 화이트,#FFFFFF,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10101,Black,블랙,#000000,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10102,Silver,실버,#A6A9AA,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10103,Gray,그레이,#8E9089,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10104,Light Gray,라이트 그레이,#D1D3D5,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10105,Dark Gray,다크 그레이,#545454,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10200,Red,레드,#C12E1F,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10201,Beige,베이지,#F7E6DE,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10202,Magenta,마젠타,#EC008C,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10203,Pink,핑크,#F55A74,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10204,Hot Pink,핫핑크,#F5547C,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10205,Maroon Red,마룬 레드,#9D2235,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10300,Orange,오렌지,#FF6A13,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10301,Pumpkin Orange,펌프킨 오렌지,#FF9016,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10400,Yellow,옐로우,#F4EE2A,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10401,Gold,골드,#E4BD68,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10402,Sunflower Yellow,썬플라워 옐로우,#FEC600,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10501,Bambu Green,뱀부 그린,#00AE42,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10502,Mistletoe Green,미슬토 그린,#3F8E43,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10503,Bright Green,브라이트 그린,#BECF00,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10601,Blue,블루,#0A2989,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10602,Blue Gray,블루 그레이,#5B6579,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10603,Cyan,시안,#0086D6,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10604,Cobalt Blue,코발트 블루,#0056B8,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10605,Turquoise,터쿼이즈,#00B1B7,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10700,Purple,퍼플,#5E43B7,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10701,Indigo Purple,인디고 퍼플,#482960,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10800,Brown,브라운,#9D432C,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10801,Bronze,브론즈,#847D48,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10802,Cocoa Brown,코코아 브라운,#6F5034,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10900,Arctic Whisper,아크틱 위스퍼,#9CDBD9 / #FFFFFF,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10901,Solar Breeze,솔라 브리즈,#E94B3C / #FFFFFF,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10902,Ocean to Meadow,오션에서 메도우로,#307FE2 / #54FF9B,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10903,Pink Citrus,핑크 시트러스,#F78F77 / #E4505A,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10904,Mint Lime,민트 라임,#B6FF43 / #4EC939,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10905,Blueberry Bubblegum,블루베리 버블검,#6FCAEF / #8573DD,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10906,Dusk Glare,더스크 글래어,#CE4406 / #ED9558,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Basic,10907,Cotton Candy Cloud,코튼 캔디 클라우드,#E7C1D5 / #8EC9E9,gradient,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0
+PLA,PLA Dynamic,15100,UV Color Changing - White to Coral,UV 컬러 변경 - 화이트에서 코랄로,#FFFFFF,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Galaxy,13203,Brown,브라운,#684A43,solid,sparkle,1.19,1540.0,26.0,9.3,55.0,190-230,35-45,55C 8 h,Bambu PLA Galaxy TDS V1.0
+PLA,PLA Galaxy,13503,Green,그린,#3B665E,solid,sparkle,1.19,1540.0,26.0,9.3,55.0,190-230,35-45,55C 8 h,Bambu PLA Galaxy TDS V1.0
+PLA,PLA Galaxy,13504,Nebulae,네뷸라,#424379,solid,sparkle,1.19,1540.0,26.0,9.3,55.0,190-230,35-45,55C 8 h,Bambu PLA Galaxy TDS V1.0
+PLA,PLA Galaxy,13602,Purple,퍼플,#594177,solid,sparkle,1.19,1540.0,26.0,9.3,55.0,190-230,35-45,55C 8 h,Bambu PLA Galaxy TDS V1.0
+PLA,PLA Glow,15200,Glow Pink,글로우 핑크,#F17B8F,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Glow,15300,Glow Orange,글로우 오렌지,#FF9D5B,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Glow,15400,Glow Yellow,글로우 옐로우,#F8FF80,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Glow,15500,Glow Green,글로우 그린,#A1FFAC,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Glow,15600,Glow Blue,글로우 블루,#7AC0E9,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16100,Black,,#000000,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16101,Gray,그레이,#999D9D,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16102,Dark Gray,,#8C8B8C,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16103,White,,#FFFFFF,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16200,Red,,#C6001A,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16301,Orange,,#FF671F,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16400,Yellow,,#EFE255,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16401,Sunflower Yellow,,#FFB549,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16501,Green,,#00BB31,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16600,Cyan,,#4DAFDA,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16601,Blue,,#004EA8,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16700,Matte Beige,,#ECC3B2,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Lite,16800,Cocoa Brown,,#745335,solid,glossy,1.4,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Marble,13103,White Marble,화이트 마블,#F7F3F0,solid,matte,1.22,2150.0,42.0,6.7,56.0,190-230,35-45,"55C, 8 h",Bambu PLA Marble TDS V1.0
+PLA,PLA Marble,13201,Red Granite,레드 그래나이트,#AD4E38,solid,matte,1.22,2150.0,42.0,6.7,56.0,190-230,35-45,"55C, 8 h",Bambu PLA Marble TDS V1.0
+PLA,PLA Matte,11100,Ivory White,아이보리 화이트,#FFFFFF,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11101,Charcoal,차콜,#000000,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11102,Ash Gray,애쉬 그레이,#9B9EA0,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11103,Bone White,본 화이트,#CBC6B8,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11104,Nardo Gray,나르도 그레이,#757575,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11200,Scarlet Red,스칼렛 레드,#DE4343,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11201,Sakura Pink,사쿠라 핑크,#E8AFCF,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11202,Dark Red,다크 레드,#BB3D43,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11203,Terracotta,테라코타,#B15533,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11204,Plum,플럼,#950051,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11300,Mandarin Orange,만다린 오렌지,#F99963,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11400,Lemon Yellow,레몬 옐로우,#F7D959,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11401,Desert Tan,데저트 탄,#E8DBB7,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11500,Grass Green,그래스 그린,#61C680,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11501,Dark Green,다크 그린,#68724D,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11502,Apple Green,애플 그린,#C2E189,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11600,Marine Blue,마린 블루,#0078BF,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11601,Ice Blue,아이스 블루,#A3D8E1,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11602,Dark Blue,다크 블루,#042F56,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11603,Sky Blue,스카이 블루,#56B7E6,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11700,Lilac Purple,라일락 퍼플,#AE96D4,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11800,Latte Brown,라떼 브라운,#D3B7A7,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11801,Dark Brown,다크 브라운,#7D6556,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11802,Dark Chocolate,다크 초콜릿,#4D3324,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Matte,11803,Caramel,캐러멜,#AE835B,solid,matte,1.31,1960.0,32.0,32.8,58.0,190-230,35-45,"55C, 8 h",Bambu PLA Matte TDS V2.0
+PLA,PLA Metal,13100,Iron Gray Metallic,,#43403D,solid,metal,1.25,2230.0,46.0,20.6,62.0,190-230,35-45,"55C, 8 h",Bambu PLA Metal TDS V2.0
+PLA,PLA Metal,13400,Iridium Gold Metallic,,#B39B84,solid,metal,1.25,2230.0,46.0,20.6,62.0,190-230,35-45,"55C, 8 h",Bambu PLA Metal TDS V2.0
+PLA,PLA Metal,13500,Oxide Green Metallic,,#1D7C6A,solid,metal,1.25,2230.0,46.0,20.6,62.0,190-230,35-45,"55C, 8 h",Bambu PLA Metal TDS V2.0
+PLA,PLA Metal,13600,Cobalt Blue Metallic,,#39699E,solid,metal,1.25,2230.0,46.0,20.6,62.0,190-230,35-45,"55C, 8 h",Bambu PLA Metal TDS V2.0
+PLA,PLA Metal,13800,Copper Brown Metallic,,#AA6443,solid,metal,1.25,2230.0,46.0,20.6,62.0,190-230,35-45,"55C, 8 h",Bambu PLA Metal TDS V2.0
+PLA,PLA Palette,18100,White,,#FFFFFF,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Palette,18101,Key,,#000000,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Palette,18200,Magenta,,#E24585,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Palette,18400,Yellow,,#FCE300,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Palette,18600,Cyan,,#0090DA,solid,glossy,1.26,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Pure,17100,Pure White,,#FFFFFF,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Pure,17101,Absolute Black,,#000000,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Pure,17200,Milky Pink,,#F7CED7,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Pure,17300,Apricot,,#FFB673,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Pure,17600,Baby Blue,,#A4DBE8,solid,glossy,1.24,2680.0,39.0,12.2,57.0,190-230,35-45,"55C, 8 h",Bambu PLA Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk,13104,Silver,실버,#EAECEB,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13105,White,화이트,#FFFFFF,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13202,Pink,핑크,#EEB1C1,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13300,Copper,코퍼,#5E4B3C,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13401,Gold,골드,#E5B03D,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13502,Green,그린,#4CE4A0,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13601,Blue,블루,#147BD1,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13701,Purple,퍼플,#854CE4,solid,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13901,Gilded Rose,길디드 로즈,#FF9425 / #C16784,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13902,Midnight Blaze,미드나이트 블레이즈,#0047BB / #7D1B49,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13903,Neon City,네온 시티,#0047BB / #BB22A3,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13904,Blue Hawaii,블루 하와이,#418FDE / #70C884,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13905,Velvet Eclipse (Black-Red),벨벳 이클립스(블랙-레드),#000000 / #A34342,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13906,South Beach,,#F772A4 / #00918B,gradient,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13909,Aurora Purple,,#7F3696 / #006EC9,gradient,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13912,Dawn Radiance,,#EC984C / #6CD4BC / #A66EB9 / #D87694,gradient,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13913,Mystic Magenta,,#720062 / #3A913F,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk,13916,Phantom Blue,,#00629B / #000000,multicolor,silk,1.32,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0
+PLA,PLA Silk+,13108,Titan Gray,타이탄 그레이,#5F6367,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13109,Silver,실버,#C8C8C8,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13110,White,화이트,#FFFFFF,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13205,Candy Red,캔디 레드,#D02727,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13206,Rose Gold,로즈 골드,#BA9594,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13207,Pink,핑크,#F7ADA6,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13404,Champagne,샴페인,#F3CFB2,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13405,Gold,골드,#F4A925,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13506,Candy Green,캔디 그린,#018814,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13507,Mint,민트,#96DCB9,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13603,Baby Blue,베이비 블루,#A8C6EE,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13604,Blue,블루,#008BDA,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Silk+,13702,Purple,퍼플,#8671CB,solid,silk,1.27,2470.0,35.0,3.5,53.0,210-240,35-45,,Bambu PLA Silk TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Sparkle,13101,Onyx Black Sparkle,오닉스 블랙 스파클,#2D2B28,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Sparkle,13102,Slate Gray Sparkle,슬레이트 그레이 스파클,#8E9089,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Sparkle,13200,Crimson Red Sparkle,크림슨 레드 스파클,#792B36,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Sparkle,13402,Classic Gold Sparkle,클래식 골드 스파클,#CEA629,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Sparkle,13501,Alpine Green Sparkle,알파인 그린 스파클,#3F5443,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Sparkle,13700,Royal Purple Sparkle,로얄 퍼플 스파클,#483D8B,solid,sparkle,1.26,1940.0,39.0,11.7,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Sparkle TDS V1.0
+PLA,PLA Tough,12100,White,화이트,#F9F7F4,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12101,Black,블랙,#25282A,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12102,Gray,그레이,#515A6C,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12103,Silver,실버,#898D8D,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12200,Vermilion Red,버밀리언 레드,#DD3C22,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12300,Orange,오렌지,#FF7F41,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12400,Yellow,옐로우,#FEDB00,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12500,Pine Green,파인 그린,#00482B,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12600,Light Blue,라이트 블루,#0085AD,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough,12700,Lavender Blue,라벤더 블루,#6667AB,solid,glossy,1.26,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0
+PLA,PLA Tough+,12104,Black,,#000000,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12105,Gray,,#AFB1AE,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12106,Silver,,#959698,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12107,White,,#FFFFFF,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12301,Orange,,#DC3A27,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12401,Yellow,,#F4D53F,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Tough+,12601,Cyan,,#009BD8,solid,glossy,1.21,2330.0,44.0,8.2,55.0,190-230,35-45,"55C, 8 h",Bambu PLA Tough TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PLA,PLA Translucent,13210,Red,,#B50011,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13211,Cherry Pink,,#F5B6CD,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13301,Orange,,#F74E02,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13410,Mellow Yellow,,#F5DBAB,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13510,Light Jade,,#96D8AF,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13610,Ice Blue,,#B8CDE9,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13611,Blue,,#0047BB,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13612,Teal,,#009FA1,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13710,Purple,,#8344B0,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Translucent,13711,Lavender,,#B8ACD6,solid,translucent,1.22,2880.0,55.4,11.0,60.0,200-240,35-65,50C 8 h,Bambu PLA Translucent TDS V3.0
+PLA,PLA Wood,13106,White Oak,화이트 오크,#D6CCA3,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA Wood,13107,Black Walnut,블랙 월넛,#4F3F24,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA Wood,13204,Rosewood,로즈우드,#4C241C,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA Wood,13403,Ochre Yellow,오커 옐로우,#C98935,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA Wood,13505,Classic Birch,클래식 버치,#918669,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA Wood,13801,Clay Brown,클레이 브라운,#995F11,solid,matte,1.21,2360.0,26.0,15.3,60.0,190-240,35-45,,Bambu PLA Wood TDS V1.0
+PLA,PLA-CF,14100,Black,블랙,#000000,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14101,Lava Gray,라바 그레이,#4D5054,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14200,Burgundy Red,버건디 레드,#951E23,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14500,Matcha Green,마차 그린,#5C9748,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14600,Jeans Blue,진 블루,#6E88BC,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14601,Royal Blue,로얄 블루,#2842AD,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PLA,PLA-CF,14700,Iris Purple,아이리스 퍼플,#69398E,solid,matte,1.22,2790.0,38.0,12.7,55.0,210-240,35-45,"55C, 8 h",Bambu PLA-CF TDS V2.0
+PETG,PETG Basic,30105,Black,,#000000,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30106,White,,#FFFFFF,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30107,Gray,,#7F7E83,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30108,Misty Blue,,#688197,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30201,Red,,#D6001C,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30301,Orange,,#FF671F,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30402,Yellow,,#FCE300,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30403,Dark Beige,,#DBC8B6,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30404,Sunflower Yellow,,#FFB81C,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30502,Green,,#009639,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30503,Pine Green,,#034638,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30504,Bright Green,,#97D700,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30603,Reflex Blue,,#001489,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30604,Navy Blue,,#0086D6,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30701,Purple,,#8A75D1,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30702,Hot Pink,,#F277C6,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG Basic,30800,Dark Brown,,#4F2C1D,solid,glossy,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0
+PETG,PETG HF,33100,White,화이트,#FFFFFF,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33101,Gray,그레이,#ADB1B2,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33102,Black,블랙,#000000,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33103,Dark Gray,다크 그레이,#515151,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33200,Red,레드,#BC0900,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33300,Orange,오렌지,#F75403,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33400,Yellow,옐로우,#FFD00B,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33401,Cream,크림,#F9DFB9,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33500,Green,그린,#00AE42,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33501,Lime Green,라임 그린,#6EE53C,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33502,Forest Green,포레스트 그린,#39541A,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33600,Blue,블루,#002E96,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33601,Lake Blue,레이크 블루,#1F79E5,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG HF,33801,Peanut Brown,피넛 브라운,#875718,solid,glossy,1.28,1810.0,34.0,8.6,69.0,230-260,65-75,65C 8 h,Bambu PETG HF TDS V1.0
+PETG,PETG Matte,35100,White,,#FFFFFF,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35101,Black,,#000000,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35102,Gray,,#7F7E83,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35200,Red,,#D6001C,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35300,Orange,,#FF671F,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35400,Yellow,,#FFD100,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35500,Lime,,#C0DF16,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35501,Avocado Green,,#BCE194,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35600,Baby Blue,,#B9D9EB,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35601,Cyan,,#00A9E0,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35602,Dark Blue,,#003087,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35603,Turquoise,,#00C7B1,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35700,Pink,,#FABBCB,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35701,Rose Beige,,#F0BDA5,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35702,Violet,,#A7A4E0,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35703,Hot Pink,,#EF4A81,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Matte,35801,Caramel,,#BF9474,solid,matte,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32100,Translucent Gray,반투명 그레이,#8E8E8E,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32101,Clear,클리어,#000000,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32200,Translucent Pink,반투명 핑크,#F9C1BD,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32300,Translucent Orange,반투명 오렌지,#FF911A,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32500,Translucent Olive,반투명 올리브,#748C45,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32501,Translucent Teal,반투명 틸,#77EDD7,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32600,Translucent Light Blue,반투명 라이트 블루,#61B0FF,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32700,Translucent Purple,반투명 퍼플,#D6ABFF,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG Translucent,32800,Translucent Brown,반투명 브라운,#C9A381,solid,translucent,1.25,1460.0,48.0,11.2,69.0,240-270,65-75,,Bambu PETG Basic TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PETG,PETG-CF,31100,Black,블랙,#000000,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+PETG,PETG-CF,31101,Titan Gray,타이탄 그레이,#565656,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+PETG,PETG-CF,31200,Brick Red,브릭 레드,#9F332A,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+PETG,PETG-CF,31500,Malachite Green,말라카이트 그린,#16B08E,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+PETG,PETG-CF,31600,Indigo Blue,인디고 블루,#324585,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+PETG,PETG-CF,31700,Violet Purple,바이올렛 퍼플,#583061,solid,matte,1.25,2460.0,59.0,10.4,74.0,240-270,65-75,"65C, 8 h",Bambu PETG-CF TDS V2.0
+ABS,ABS,40100,White,화이트,#FFFFFF,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40101,Black,블랙,#000000,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40102,Silver,실버,#87909A,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40200,Red,레드,#D32941,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40300,Orange,오렌지,#FF6A13,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40400,Yellow,옐로우,#FCE900,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40401,Beige,베이지,#DFD1A7,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40402,Tangerine Yellow,탠저린 옐로우,#FFC72C,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40500,Bambu Green,뱀부 그린,#00AE42,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40501,Mint,민트,#7AE1BF,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40502,Olive,올리브,#789D4A,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40600,Blue,블루,#0A2CA5,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40601,Azure,애저,#489FDF,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40602,Navy Blue,네이비 블루,#0C2340,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40700,Purple,퍼플,#AF1685,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS,40701,Lavender,라벤더,#7248BD,solid,satin,1.05,2200.0,41.0,10.5,87.0,240-270,80-100,"80C, 8 h",Bambu ABS TDS V2.0
+ABS,ABS-GF,41100,White,화이트,#FFFFFF,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41101,Black,블랙,#000000,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41102,Gray,그레이,#C6C6C6,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41200,Red,레드,#E83100,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41300,Orange,오렌지,#F48438,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41400,Yellow,옐로우,#FFE133,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41500,Green,그린,#61BF36,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ABS,ABS-GF,41600,Blue,블루,#0C3B95,solid,matte,1.08,3160.0,36.0,6.3,99.0,240-280,80-100,80C 8 h,Bambu ABS-GF TDS V1.0
+ASA,ASA,45100,White,화이트,#FFFAF2,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA,45101,Black,블랙,#000000,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA,45102,Gray,그레이,#8A949E,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA,45200,Red,레드,#E02928,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA,45500,Green,그린,#00A6A0,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA,45600,Blue,블루,#2140B4,solid,satin,1.05,2450.0,37.0,9.2,100.0,240-270,80-100,,Bambu ASA TDS V3.0
+ASA,ASA Aero,46100,White,화이트,#F5F1DD,solid,matte,0.99,2010.0,32.0,5.1,85.0,240-280,80-90,80C 8 h,Bambu ASA Aero TDS V1.0
+ASA,ASA-CF,46101,Black,블랙,#000000,solid,matte,1.02,4200.0,34.0,9.6,110.0,250-280,80-100,80C 8 h,Bambu ASA-CF TDS V1.0
+TPU,TPU 75A (2.85mm),56100,Black,,#000000,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56200,Red,,#E4002B,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56300,Mandarin Orange,,#FFA06A,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56400,Lemon Yellow,,#FBDB65,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56401,Dark Ivory,,#F1E6B2,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56500,Dark Green,,#617354,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56501,Grass Green,,#7CCC6C,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56600,Cyan,,#00A3E1,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56700,Purple,,#AD96DC,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 75A (2.85mm),56701,Pink,,#FABBCB,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0 (nearest Bambu TDS; density from Bambu Studio profile)
+TPU,TPU 85A,51107,Black,,#000000,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0
+TPU,TPU 85A,51201,Rose Beige/Flesh,,#F3CFB2,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0
+TPU,TPU 85A,51305,Neon Orange,,#F68B1B,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0
+TPU,TPU 85A,51500,Light Cyan,,#C3E2D6,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0
+TPU,TPU 85A,51501,Lime Green,,#CDEA80,solid,satin,1.18,6.8,12.0,700.0,,200-250,30-35,70C 8 h,Bambu TPU 85A TDS V1.0
+TPU,TPU 90A,51103,Black,,#000000,solid,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51105,White,,#FFFFFF,solid,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51106,Quicksilver,,#9EA2A2,solid,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51601,Crystal Blue,,#7EB4E1,solid,translucent,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51700,Grape Jelly,,#D6ABFF,solid,translucent,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51800,Cocoa Brown,,#5C4738,solid,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51900,Frozen,,#40B6E4 / #FFFFFF,gradient,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 90A,51901,Blaze,,#D21B3C / #F1AAA8,gradient,satin,1.24,5.3,12.5,650.0,,200-250,30-35,70C 8 h,Bambu TPU 90A TDS V1.0
+TPU,TPU 95A,50100,White,화이트,#FFFFFF,solid,satin,1.2,9.2,29.6,700.0,,220-240,30-35,,Bambu TPU 95A TDS V3.0
+TPU,TPU 95A,50101,Black,블랙,#000000,solid,satin,1.2,9.2,29.6,700.0,,220-240,30-35,,Bambu TPU 95A TDS V3.0
+TPU,TPU 95A HF,51100,Black,블랙,#101820,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU 95A HF,51101,Gray,그레이,#898D8D,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU 95A HF,51102,White,화이트,#FFFFFF,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU 95A HF,51200,Red,레드,#C8102E,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU 95A HF,51400,Yellow,옐로우,#F3E600,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU 95A HF,51600,Blue,블루,#0072CE,solid,satin,1.22,9.8,27.3,650.0,,220-240,30-35,,Bambu TPU 95A HF TDS V1.0
+TPU,TPU for AMS,53100,White,화이트,#FFFFFF,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53101,Black,블랙,#000000,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53102,Gray,그레이,#939393,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53200,Red,레드,#ED0000,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53400,Yellow,옐로우,#F9EF41,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53500,Neon Green,네온 그린,#90FF1A,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+TPU,TPU for AMS,53600,Blue,블루,#5898DD,solid,satin,1.26,1190.0,22.4,650.0,,220-240,30-35,"70C, 8 h",Bambu TPU for AMS TDS V1.0
+PC,PC,60100,White,화이트,#FFFFFF,solid,glossy,1.2,2110.0,55.0,3.8,112.0,260-280,90-110,,Bambu PC TDS V3.0
+PC,PC,60101,Black,블랙,#000000,solid,glossy,1.2,2110.0,55.0,3.8,112.0,260-280,90-110,,Bambu PC TDS V3.0
+PC,PC,60102,Clear Black,클리어 블랙,#686865,solid,translucent,1.2,2110.0,55.0,3.8,112.0,260-280,90-110,,Bambu PC TDS V3.0
+PC,PC,60103,Transparent,투명,#000000,solid,translucent,1.2,2110.0,55.0,3.8,112.0,260-280,90-110,,Bambu PC TDS V3.0
+PC,PC FR,63100,Black,블랙,#000000,solid,glossy,1.18,1670.0,60.0,2.4,113.0,260-280,90-110,,Bambu PC FR TDS V1.0
+PC,PC FR,63101,White,화이트,#FFFFFF,solid,glossy,1.18,1670.0,60.0,2.4,113.0,260-280,90-110,,Bambu PC FR TDS V1.0
+PC,PC FR,63102,Gray,그레이,#A8A8AA,solid,glossy,1.18,1670.0,60.0,2.4,113.0,260-280,90-110,,Bambu PC FR TDS V1.0
+PA,PA6-CF,72100,Black,블랙,#000000,solid,matte,1.09,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0
+PA,PA6-GF,72102,White,화이트,#EAEAE4,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72103,Gray,그레이,#353533,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72104,Black,블랙,#000000,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72200,Orange,오렌지,#FF4800,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72400,Yellow,옐로우,#FFCE00,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72500,Lime,라임,#C5ED48,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72600,Blue,블루,#75AED8,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PA6-GF,72800,Brown,브라운,#5B492F,solid,matte,1.14,4430.0,102.0,5.8,186.0,260-290,80-100,,Bambu PA6-CF TDS V3.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PA,PAHT-CF,70100,Black,블랙,#000000,solid,matte,1.06,3860.0,88.0,10.4,194.0,260-290,80-100,"80C, 8-12 h",Bambu PAHT-CF TDS V2.0
+PA,PPA-CF,73100,Black,블랙,#000000,solid,matte,1.17,3860.0,88.0,10.4,194.0,260-290,80-100,"80C, 8-12 h",Bambu PAHT-CF TDS V2.0 (nearest Bambu TDS; density from Bambu Studio profile)
+PET,PET-CF,71100,Black,블랙,#000000,solid,matte,1.29,4730.0,74.0,4.5,205.0,260-290,80-100,"80C, 8-12 h",Bambu PET-CF TDS V3.0
+PPS,PPS-CF,76100,Black,블랙,#000000,solid,matte,1.26,8230.0,87.0,1.2,264.0,310-340,100-120,,Bambu PPS-CF TDS V1.0
+PVA,PVA,66400,Clear,클리어,#F0F1A8,solid,translucent,1.27,2000,40,10,,220-250,35-45,"80C, 8-12 h",Bambu PVA TDS V1.0; mechanics = generic estimate (not published by Bambu)
+Support,Support for ABS,66100,White,화이트,#FFFFFF,solid,matte,1.16,1500,25,5,,240-270,80-100,80C 4 h,Bambu Support for ABS TDS V1.0; mechanics = generic estimate (not published by Bambu)
+Support,Support for PA/PET,65500,Green,그린,#C0DF16,solid,matte,1.22,1500,25,5,,,,,Bambu Studio profile density; mechanics = generic estimate (not published by Bambu)
+Support,Support for PLA,65104,White,,#FFFFFF,solid,matte,1.33,1500,25,5,,220-230,35-45,,Bambu Support for PLA TDS V1.0; mechanics = generic estimate (not published by Bambu)
+Support,Support for PLA/PETG,65102,Nature,네이처,#000000,solid,translucent,1.28,1500,25,5,,190-240,35-60,"75C, 8 h",Bambu Support for PLA PETG TDS V1.0; mechanics = generic estimate (not published by Bambu)
+Support,Support for PLA/PETG,65103,Black,블랙,#000000,solid,matte,1.28,1500,25,5,,190-240,35-60,"75C, 8 h",Bambu Support for PLA PETG TDS V1.0; mechanics = generic estimate (not published by Bambu)

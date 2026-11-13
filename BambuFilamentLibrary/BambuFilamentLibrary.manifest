@@ -1,0 +1,11 @@
+{
+	"autodeskProduct": "Fusion",
+	"type": "script",
+	"author": "",
+	"description": {
+		"": "Adds every Bambu Lab filament to Fusion: one appearance per official color and one physical material per product line (Bambu TDS values). Downloads Bambu's latest color table on each run."
+	},
+	"supportedOS": "windows|mac",
+	"editEnabled": true,
+	"version": "2026.11.13"
+}
