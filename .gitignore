@@ -10,3 +10,6 @@ __pycache__/
 BambuFilamentLibrary/last_run_log.txt
 BambuFilamentLibrary/last_report.txt
 .vscode/
+BambuFilamentLibrary/favorites_ids.json
+BambuFilamentLibrary/thumbnails_done.json
+BambuFilamentLibrary/thumbnail_log.txt

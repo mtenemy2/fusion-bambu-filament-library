@@ -71,6 +71,9 @@ are added automatically.
       - Wait until the progress window closes.
  5) Optionally save the new design (e.g. "Bambu Filament Library")
     as a reference file. The items are already in Favorites either way.
+ 6) When asked "Recolor them to the real filament colors?", click Yes,
+    then close Fusion. Within about 30 seconds the Favorites thumbnails
+    are recolored. Open Fusion again to see them. (see section 4-1)
 
  * To check for new filaments, just run it again.
    Only newly released colors are added.
@@ -91,6 +94,26 @@ are added automatically.
    In Fusion an appearance overrides the material's look, so this is
    the normal workflow. (The Fusion API cannot link a color to a
    material directly.)
+
+
+--------------------------------------------------------------
+4-1. Thumbnail colors
+--------------------------------------------------------------
+
+ Fusion cannot re-render the preview picture (thumbnail) of appearances
+ created by a script, so they all start out white.
+
+ If you click Yes on the "Recolor ..." question, the thumbnails inside
+ the Favorites library file (Favorites.adsklib) are tinted with the real
+ filament colors right after you close Fusion.
+   - It runs after Fusion closes because Fusion keeps the file in use.
+   - The original is backed up once as
+     Favorites.adsklib.before-bambu-thumbnails
+     (in %LOCALAPPDATA%\Autodesk\Common\Material Library\<version>\).
+   - Log: thumbnail_log.txt in the script folder.
+   - When new colors are added, the script asks again on the next run.
+
+ To undo: close Fusion and rename the backup back to Favorites.adsklib.
 
 
 --------------------------------------------------------------
@@ -116,6 +139,7 @@ are added automatically.
    FAMILIES = None          only some families,
                             e.g. FAMILIES = ("PLA", "PETG")
    TEST_MODE = False        True builds only a few samples
+   RECOLOR_THUMBNAILS = True  offer to recolor thumbnails
 
 
 --------------------------------------------------------------

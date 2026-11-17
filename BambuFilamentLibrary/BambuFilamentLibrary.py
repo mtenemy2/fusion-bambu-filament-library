@@ -5,7 +5,7 @@
 # 2. Creates one Appearance per filament color (official hex) and one physical Material per product line
 #    (density, modulus, strength, thermal values from Bambu technical data sheets) in a new design.
 # 3. Adds them to Fusion Favorites so they are available in every design. Items already in Favorites are skipped.
-import adsk.core, adsk.fusion, importlib, os, sys, traceback
+import adsk.core, adsk.fusion, importlib, json, os, re, sys, traceback
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
@@ -18,6 +18,7 @@ ADD_TO_FAVORITES = True          # add created appearances/materials to Favorite
 FAMILIES = None                  # None = all; or e.g. ("PLA", "PETG", "ABS", "ASA", "TPU")
 PREFIX = "Bambu"
 TEST_MODE = False                # True: build only a small sample, for checking
+RECOLOR_THUMBNAILS = True        # offer to recolor the white Favorites thumbnails (runs after Fusion closes)
 
 LOG = []
 
@@ -252,6 +253,86 @@ def read_density(material):
     return None
 
 
+# ---------- thumbnails ----------
+def favorite_ids(app):
+    """{color code: asset id} of the Bambu appearances in Favorites (used to find their thumbnail files)."""
+    ids = {}
+    favs = app.favoriteAppearances
+    for i in range(favs.count):
+        a = favs.item(i)
+        m = re.match(r"^%s .*\[(\d{5})\]$" % re.escape(PREFIX), a.name)
+        if m:
+            ids[m.group(1)] = a.id
+    return ids
+
+
+def helper_python():
+    """Path of Fusion's bundled python executable (sys.executable is Fusion itself)."""
+    import glob
+    roots = {sys.prefix, sys.base_prefix, sys.exec_prefix, os.path.dirname(sys.executable or "")}
+    try:
+        roots.add(os.path.dirname(os.path.dirname(json.__file__)))     # .../Python/Lib/json -> .../Python
+        roots.add(os.path.dirname(os.path.dirname(os.path.dirname(json.__file__))))
+    except Exception:
+        pass
+    cands = []
+    for r in roots:
+        if not r:
+            continue
+        cands += [os.path.join(r, "python.exe"), os.path.join(r, "Python", "python.exe"),
+                  os.path.join(r, "bin", "python3"), os.path.join(r, "Python", "bin", "python3")]
+        cands += glob.glob(os.path.join(r, "**", "bin", "python3"), recursive=False)
+    if sys.executable and "python" in os.path.basename(sys.executable).lower():
+        cands.append(sys.executable)
+    for p in cands:
+        if os.path.isfile(p):
+            return p
+    log("python candidates tried:", cands)
+    return None
+
+
+def offer_thumbnail_fix(app, ui, title):
+    """Fusion cannot re-render thumbnails, so recolor them in Favorites.adsklib after Fusion closes."""
+    if not RECOLOR_THUMBNAILS:
+        return
+    ids = favorite_ids(app)
+    if not ids:
+        return
+    with open(os.path.join(HERE, "favorites_ids.json"), "w", encoding="utf-8") as f:
+        json.dump(ids, f, indent=0)
+    done_p = os.path.join(HERE, "thumbnails_done.json")
+    done = set(json.load(open(done_p, encoding="utf-8"))) if os.path.exists(done_p) else set()
+    todo = [c for c in ids if c not in done]
+    if not todo:
+        return
+    py = helper_python()
+    if not py:
+        log("thumbnail fix: bundled python not found")
+        return
+    q = ("%d Bambu appearances in Favorites still show the white preview thumbnail.\n\n"
+         "Recolor them to the real filament colors?\n\n"
+         "Fusion cannot change thumbnails while it is running, so the fix runs automatically right after you\n"
+         "CLOSE Fusion (about 30 seconds). Open Fusion again afterwards to see the colored thumbnails.\n"
+         "A backup of the Favorites library is kept.") % len(todo)
+    if ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                     adsk.core.MessageBoxIconTypes.QuestionIconType) != adsk.core.DialogResults.DialogYes:
+        return
+    import subprocess
+    args = [py, "-I", os.path.join(HERE, "thumbs.py"), "--wait-pid", str(os.getpid())]
+    kw = dict(cwd=HERE, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+    if sys.platform == "win32":
+        flags = 0x00000008 | 0x00000200 | 0x08000000                 # detached, new group, no window
+        try:   # also leave Fusion's job object so the helper survives Fusion closing
+            subprocess.Popen(args, creationflags=flags | 0x01000000, **kw)
+        except OSError:
+            subprocess.Popen(args, creationflags=flags, **kw)
+    else:
+        subprocess.Popen(args, start_new_session=True, **kw)
+    log("thumbnail fix scheduled:", args)
+    ui.messageBox("OK. Close Fusion when you are ready; the thumbnails are recolored after it closes.\n"
+                  "Log: thumbnail_log.txt in the script folder.", title)
+
+
 def run(context):
     app = adsk.core.Application.get()
     ui = app.userInterface
@@ -303,7 +384,8 @@ def run(context):
             q = summary + "\nEverything is already in Favorites.\nBuild a full library design anyway (to save as a reference file)?"
         res = ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType, adsk.core.MessageBoxIconTypes.QuestionIconType)
         if res != adsk.core.DialogResults.DialogYes:
-            log("Cancelled by user")
+            log("Build skipped by user")
+            offer_thumbnail_fix(app, ui, title)
             return
         todo = new_rows if new_rows else data
 
@@ -383,6 +465,7 @@ def run(context):
         if stale:
             msg += "\n\n%d Favorites entries are outdated - see last_report.txt in the script folder." % len(stale)
         ui.messageBox(msg, title)
+        offer_thumbnail_fix(app, ui, title)
     except Exception:
         log("ERROR", traceback.format_exc())
         ui.messageBox("Failed:\n" + traceback.format_exc(), title)

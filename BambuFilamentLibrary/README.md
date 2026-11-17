@@ -28,6 +28,7 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
 2. 즐겨찾기와 비교해서 **아직 없는 색상 수**를 보여 주고 추가할지 묻습니다.
 3. **Yes**를 누르면 새 디자인이 열리고 항목이 만들어져 즐겨찾기에 추가됩니다. 이미 있는 항목은 건너뜁니다.
 4. 처음 실행하면 1~3분 정도 걸립니다. 다음부터는 새로 나온 색상만 추가하므로 빠릅니다.
+5. "Recolor ..." 창에서 **Yes**를 누르고 Fusion을 종료하면, 흰색으로 보이던 즐겨찾기 썸네일이 실제 필라멘트 색으로 바뀝니다. Fusion API는 썸네일을 다시 그릴 수 없어서, Fusion이 꺼진 뒤 `Favorites.adsklib` 안의 썸네일 그림을 직접 칠합니다. 원본은 `Favorites.adsklib.before-bambu-thumbnails`로 백업됩니다.
 
 새 필라멘트가 나왔는지 궁금할 때 **다시 실행**하기만 하면 됩니다.
 
@@ -49,6 +50,7 @@ Fusion API는 즐겨찾기 항목을 덮어쓰거나 지울 수 없습니다. �
 | `ADD_TO_FAVORITES` | `True` | 즐겨찾기에 추가 |
 | `FAMILIES` | `None` | 특정 계열만: 예 `("PLA", "PETG")` |
 | `TEST_MODE` | `False` | 계열·질감별 샘플 몇 개만 생성 |
+| `RECOLOR_THUMBNAILS` | `True` | 흰색 썸네일을 실제 색으로 바꾸기 제안 |
 
 ## 데이터와 한계
 - 색상: Bambu Studio 공식 `filaments_color_codes.json` (실행할 때 최신본 다운로드)
@@ -66,6 +68,8 @@ Fusion API는 즐겨찾기 항목을 덮어쓰거나 지울 수 없습니다. �
 Adds every Bambu Lab filament to Autodesk Fusion: one **Appearance per color** (official hex) and one **Physical Material per product line** (density, modulus, strength, thermal values from Bambu technical data sheets), all added to **Favorites**. Each run downloads Bambu's latest official color table, so new filaments are picked up automatically; it falls back to the bundled data offline.
 
 **Install**: copy this `BambuFilamentLibrary` folder into Fusion's `API/Scripts` folder (Windows `%APPDATA%\Autodesk\Autodesk Fusion 360\API\Scripts\`, macOS `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/`), or add it with the **+** button in *Scripts and Add-Ins*. Then `Shift+S` → **BambuFilamentLibrary** → **Run**.
+
+When asked, click **Yes** to recolor the white Favorites thumbnails: the fix runs right after you close Fusion (the API cannot re-render thumbnails, so the images inside `Favorites.adsklib` are tinted; a backup is kept).
 
 **Run again any time** to add newly released colors; items already in Favorites are skipped. Fusion's API cannot overwrite Favorites, so if the dialog reports outdated entries, remove those listed in `last_report.txt` from Favorites and run again.
 

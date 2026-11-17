@@ -21,7 +21,7 @@ LIBDIR = os.path.join(ROOT, "BambuFilamentLibrary")
 DIST = os.path.join(ROOT, "dist")
 FUSION_SCRIPTS = os.path.join(os.environ.get("APPDATA", ""), "Autodesk", "Autodesk Fusion 360", "API", "Scripts", "BambuFilamentLibrary")
 PACKAGE_FILES = ["BambuFilamentLibrary.py", "BambuFilamentLibrary.manifest", "bambu_data.py", "bambu_filaments.json",
-                 "bambu_filaments.csv", "tds_all.json", "lines.json", "README_KO.txt", "README_EN.txt", "README.md", "NOTICE.md"]
+                 "bambu_filaments.csv", "tds_all.json", "lines.json", "thumbs.py", "README_KO.txt", "README_EN.txt", "README.md", "NOTICE.md"]
 sys.path.insert(0, os.path.join(TOOLS, "pylib"))
 sys.path.insert(0, LIBDIR)
 import bambu_data  # noqa: E402  (shared with the Fusion script)
