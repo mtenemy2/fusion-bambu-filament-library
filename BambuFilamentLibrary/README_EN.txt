@@ -90,6 +90,15 @@ are added automatically.
  * To check for new filaments, just run it again.
    Newly released colors are preselected in the window.
  * Without internet, the data bundled in the folder is used.
+ * Reset (uninstall): click "Reset (remove all)" at the bottom left of
+   the window, tick the box, click "Schedule reset" and close Fusion.
+   About 10 seconds later every Bambu item is removed from Favorites
+   (Fusion's API cannot remove favorites, so it runs after Fusion
+   closes). The old library is kept as
+   Favorites.adsklib.before-bambu-reset-<date>; your other favorites
+   are added back the next time you run the script.
+   Undo: close Fusion, delete Favorites.adsklib and rename the backup
+   to Favorites.adsklib.
 
 
 --------------------------------------------------------------

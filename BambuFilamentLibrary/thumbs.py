@@ -162,7 +162,13 @@ def default_library():
     if sys.platform == "darwin":
         base = os.path.expanduser("~/Library/Application Support/Autodesk/Common/Material Library")
     libs = glob.glob(os.path.join(base, "*", "Favorites.adsklib"))
-    return max(libs, key=os.path.getmtime) if libs else None
+    # newest file; on a tie the newest version folder (e.g. 5.0.0 over 4.2.3 or 2025...)
+    return max(libs, key=lambda p: (int(os.path.getmtime(p)), _ver_key(os.path.basename(os.path.dirname(p))))) if libs else None
+
+
+def _ver_key(folder):
+    import re
+    return [int(x) for x in re.findall(r"\d+", folder)] if re.match(r"^\d+\.\d+", folder) else [0]
 
 
 def bambu_thumbnails(z, id_map=None):

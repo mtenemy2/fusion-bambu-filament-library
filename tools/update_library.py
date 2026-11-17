@@ -21,7 +21,7 @@ LIBDIR = os.path.join(ROOT, "BambuFilamentLibrary")
 DIST = os.path.join(ROOT, "dist")
 FUSION_SCRIPTS = os.path.join(os.environ.get("APPDATA", ""), "Autodesk", "Autodesk Fusion 360", "API", "Scripts", "BambuFilamentLibrary")
 PACKAGE_FILES = ["BambuFilamentLibrary.py", "BambuFilamentLibrary.manifest", "bambu_data.py", "bambu_filaments.json",
-                 "bambu_filaments.csv", "tds_all.json", "lines.json", "thumbs.py", "ui/selector.html", "ui/logo.png", "README_KO.txt", "README_EN.txt", "README.md", "NOTICE.md"]
+                 "bambu_filaments.csv", "tds_all.json", "lines.json", "thumbs.py", "reset.py", "empty_favorites.adsklib", "ui/selector.html", "ui/logo.png", "README_KO.txt", "README_EN.txt", "README.md", "NOTICE.md"]
 sys.path.insert(0, os.path.join(TOOLS, "pylib"))
 sys.path.insert(0, LIBDIR)
 import bambu_data  # noqa: E402  (shared with the Fusion script)
@@ -82,6 +82,23 @@ def write_csv(path, out):
         w.writerow(cols)
         for r in out:
             w.writerow([" / ".join(r[c]) if c == "hex" else r[c] for c in cols])
+
+
+def free_version(version):
+    """Date version, with .1, .2 ... appended when a release tag for that date already exists."""
+    import subprocess
+    tags = set()
+    for cmd in (["git", "ls-remote", "--tags", "origin"], ["git", "tag"]):
+        try:
+            out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=30).stdout
+            tags |= {ln.split("refs/tags/")[-1].strip().removesuffix("^{}") for ln in out.splitlines() if ln.strip()}
+        except Exception:
+            pass
+    v, i = version, 0
+    while "v" + v in tags:
+        i += 1
+        v = "%s.%d" % (version, i)
+    return v
 
 
 def set_manifest_version(version):
@@ -162,6 +179,7 @@ def main():
     version = today.replace("-", ".")
     has_zip = os.path.isdir(DIST) and any(f.endswith(".zip") for f in os.listdir(DIST))
     if changed or not has_zip:
+        version = free_version(version)
         set_manifest_version(version)
     else:
         version = json.load(open(os.path.join(LIBDIR, "BambuFilamentLibrary.manifest"), encoding="utf-8")).get("version", version)

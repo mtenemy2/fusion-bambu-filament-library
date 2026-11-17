@@ -120,6 +120,17 @@
   .credit-links span { color: var(--muted); font-size: 11px; word-break: break-all; }
   .credit-links svg { flex: none; }
   .fine { color: var(--muted); font-size: 11px; margin: 0 0 14px; }
+  .btn.danger { color: #c0262d; border-color: #f0c4c6; }
+  .btn.danger:hover { background: #fdf0f0; }
+  .btn.danger-solid { background: #d1343b; border-color: #d1343b; color: #fff; }
+  .btn.danger-solid:disabled { background: #eba9ac; border-color: #eba9ac; cursor: default; }
+  .btn:disabled { cursor: default; opacity: .55; }
+  .counts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 12px; }
+  .counts div { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+  .counts b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .counts span { color: var(--muted); font-size: 11px; }
+  .counts .warn b { color: #c0262d; }
+  .banner { background: var(--warn-weak); color: var(--warn); padding: 6px 14px; font-size: 12px; font-weight: 600; display: none; }
 </style>
 </head>
 <body>
@@ -147,8 +158,10 @@
   <div class="grow" id="selInfo"></div>
   <a href="#" id="expand" style="color:var(--muted);font-size:12px"></a>
 </div>
+<div class="banner" id="resetBanner"></div>
 <main id="list"><div class="loading" id="loading">Loading…</div></main>
 <footer>
+  <button class="btn danger" id="resetBtn"></button>
   <div class="grow">
     <label><input type="checkbox" id="recolor" checked> <span id="recolorLbl"></span></label>
     <div class="note" id="footNote"></div>
@@ -167,6 +180,23 @@
     <div class="row">
       <button class="btn" id="agreeCancel"></button>
       <button class="btn primary" id="agreeOk" disabled></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+  <div class="card">
+    <h2 id="resetTitle"></h2>
+    <div class="sub" id="resetSub"></div>
+    <div class="counts">
+      <div class="warn"><b id="rcBambu">0</b><span id="rcBambuLbl"></span></div>
+      <div><b id="rcOther">0</b><span id="rcOtherLbl"></span></div>
+    </div>
+    <div class="terms" id="resetTerms"></div>
+    <label class="agree"><input type="checkbox" id="resetChk"><span id="resetLbl"></span></label>
+    <div class="row">
+      <button class="btn" id="resetCancel"></button>
+      <button class="btn danger-solid" id="resetOk" disabled></button>
     </div>
   </div>
 </div>
@@ -214,7 +244,20 @@ const T = KO ? {
   agreeOk: "동의하고 계속", close: "닫기",
   creditsTitle: "Bambu Lab 필라멘트 라이브러리", creditsBy: "만든 사람: 우당탕탕 스튜디오 (UDTT Studio)",
   ytName: "YouTube · 우당탕탕 스튜디오",
-  creditsFine: "MIT 라이선스 · 색상 데이터 © Bambu Lab (AGPL-3.0)\nBambu Lab 및 Autodesk와 관계없는 비공식 프로그램입니다."
+  creditsFine: "MIT 라이선스 · 색상 데이터 © Bambu Lab (AGPL-3.0)\nBambu Lab 및 Autodesk와 관계없는 비공식 프로그램입니다.",
+  reset: "리셋 (모두 제거)", resetTitle: "Bambu 항목 모두 제거 (리셋)",
+  resetSub: "이 프로그램으로 즐겨찾기에 추가한 Bambu 색상과 재질을 모두 지웁니다.",
+  rcBambu: "제거할 Bambu 항목", rcOther: "유지할 다른 즐겨찾기",
+  resetTerms: (o) => [
+    "Fusion은 실행 중에 즐겨찾기를 지울 수 없어서, <b>리셋을 예약한 뒤 Fusion을 종료하면</b> 약 10초 뒤에 제거됩니다. Fusion을 다시 켜면 비어 있습니다.",
+    "제거 전에 즐겨찾기 라이브러리 전체를 <b>백업</b>합니다 (Favorites.adsklib.before-bambu-reset-날짜).",
+    o ? `Bambu가 아닌 다른 즐겨찾기 ${o}개는 이 스크립트를 <b>다음에 실행할 때 자동으로 다시 추가</b>됩니다.` : "Bambu가 아닌 다른 즐겨찾기는 없습니다.",
+    "이미 만들어 둔 디자인 파일에 적용된 외관·재질은 지워지지 않습니다.",
+    "스크립트 폴더는 그대로 남습니다. 완전히 지우려면 Shift+S 창에서 스크립트를 제거하세요."
+  ],
+  resetLbl: "위 내용을 확인했으며, Bambu 항목을 모두 제거하는 데 동의합니다.",
+  resetOk: "리셋 예약", resetNone: "즐겨찾기에 Bambu 항목이 없습니다.", resetNoPy: "이 PC에서는 리셋을 사용할 수 없습니다 (Fusion Python을 찾지 못함).",
+  resetPending: "리셋이 예약되어 있습니다. Fusion을 종료하면 Bambu 항목이 모두 제거되므로, 지금 설치하는 항목도 함께 지워집니다."
 } : {
   title: "Bambu Lab Filament Library", fil: "Filaments (colors)", mat: "Physical materials", search: "Search: name, color code, hex, product line…",
   all: "Select all", selInfo: (a, b) => `${a} of ${b} selected`, expand: "Expand all", collapse: "Collapse all",
@@ -235,7 +278,20 @@ const T = KO ? {
   agreeOk: "Agree and continue", close: "Close",
   creditsTitle: "Bambu Lab Filament Library", creditsBy: "Made by UDTT Studio (우당탕탕 스튜디오)",
   ytName: "YouTube · UDTT Studio (우당탕탕 스튜디오)",
-  creditsFine: "MIT License · Color data © Bambu Lab (AGPL-3.0)\nUnofficial; not affiliated with Bambu Lab or Autodesk."
+  creditsFine: "MIT License · Color data © Bambu Lab (AGPL-3.0)\nUnofficial; not affiliated with Bambu Lab or Autodesk.",
+  reset: "Reset (remove all)", resetTitle: "Remove all Bambu items (reset)",
+  resetSub: "Removes every Bambu color and material this program added to your Favorites.",
+  rcBambu: "Bambu items to remove", rcOther: "Other favorites kept",
+  resetTerms: (o) => [
+    "Fusion cannot remove favorites while it runs, so <b>schedule the reset and then close Fusion</b>. About 10 seconds later the items are removed; they are gone when you open Fusion again.",
+    "The whole Favorites library is <b>backed up</b> first (Favorites.adsklib.before-bambu-reset-&lt;date&gt;).",
+    o ? `Your other ${o} favorites are <b>added back automatically</b> the next time you run this script.` : "You have no other favorites.",
+    "Appearances and materials already used in your designs are not affected.",
+    "The script folder stays. To remove it completely, delete the script in the Shift+S window."
+  ],
+  resetLbl: "I have read the above and want to remove all Bambu items.",
+  resetOk: "Schedule reset", resetNone: "There are no Bambu items in your Favorites.", resetNoPy: "Reset is not available on this PC (Fusion's Python was not found).",
+  resetPending: "A reset is scheduled. When Fusion closes, all Bambu items are removed, including anything you install now."
 };
 
 let D = null;                 // payload from Fusion
@@ -483,7 +539,32 @@ document.querySelectorAll(".credit-links button").forEach(b => b.addEventListene
   else window.open(url, "_blank");
 }));
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && $("creditsModal").classList.contains("show")) showModal("creditsModal", false);
+  if (e.key !== "Escape") return;
+  if ($("creditsModal").classList.contains("show")) showModal("creditsModal", false);
+  if ($("resetModal").classList.contains("show")) showModal("resetModal", false);
+});
+
+// ---------- reset (uninstall) ----------
+function openReset() {
+  if (!agreed) return showModal("agreeModal", true);
+  const f = D.favorites || { bambu_appearances: 0, bambu_materials: 0, other_appearances: 0, other_materials: 0 };
+  const nb = f.bambu_appearances + f.bambu_materials, no = f.other_appearances + f.other_materials;
+  $("rcBambu").textContent = nb;
+  $("rcOther").textContent = no;
+  $("resetTerms").innerHTML = T.resetTerms(no).map(p => `<p>• ${p}</p>`).join("") +
+    (!D.reset_available ? `<p style="color:#c0262d"><b>${T.resetNoPy}</b></p>` : (nb ? "" : `<p><b>${T.resetNone}</b></p>`));
+  $("resetChk").checked = false;
+  $("resetChk").disabled = !nb || !D.reset_available;
+  $("resetOk").disabled = true;
+  showModal("resetModal", true);
+}
+$("resetBtn").addEventListener("click", openReset);
+$("resetChk").addEventListener("change", () => { $("resetOk").disabled = !$("resetChk").checked; });
+$("resetCancel").addEventListener("click", () => showModal("resetModal", false));
+$("resetOk").addEventListener("click", () => {
+  if (!$("resetChk").checked) return;
+  $("resetOk").disabled = true;
+  send("reset", {});
 });
 let LINKS = {
   github: "https://github.com/mtenemy2/fusion-bambu-filament-library",
@@ -512,6 +593,7 @@ function init(payload) {
   D.colors.forEach(c => { if (!c.installed) selC.add(c.code); });
   D.materials.forEach(m => { if (!m.installed) selM.add(m.line); });
   if (!D.recolor_available) { $("recolor").checked = false; $("recolor").disabled = true; }
+  if (D.reset_pending) { $("resetBanner").textContent = T.resetPending; $("resetBanner").style.display = "block"; }
   render();
 }
 document.title = T.title;
@@ -533,6 +615,14 @@ $("creditsBy").textContent = T.creditsBy;
 $("ytName").textContent = T.ytName;
 $("creditsFine").innerText = T.creditsFine;
 $("creditsClose").textContent = T.close;
+$("resetBtn").textContent = T.reset;
+$("resetTitle").textContent = T.resetTitle;
+$("resetSub").textContent = T.resetSub;
+$("rcBambuLbl").textContent = T.rcBambu;
+$("rcOtherLbl").textContent = T.rcOther;
+$("resetLbl").textContent = T.resetLbl;
+$("resetOk").textContent = T.resetOk;
+$("resetCancel").textContent = T.cancel;
 showLinks();
 window.fusionJavaScriptHandler = { handle: (action, data) => { if (action === "data") init(data); return "OK"; } };
 

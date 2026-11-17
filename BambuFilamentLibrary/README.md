@@ -32,6 +32,8 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
 
 새 필라멘트가 나왔는지 궁금할 때 **다시 실행**하기만 하면 됩니다.
 
+**리셋(제거)**: 선택 창의 **리셋 (모두 제거)** → 체크 → **리셋 예약** → Fusion 종료. 즐겨찾기의 Bambu 항목이 모두 지워지고(원본은 `Favorites.adsklib.before-bambu-reset-날짜`로 백업), 다른 즐겨찾기는 다음 실행 때 다시 추가됩니다.
+
 ## 사용법
 - 바디 우클릭 → **Physical Material** → `Bambu PLA Basic` 지정 (무게·해석용)
 - **Appearance**(단축키 `A`) → 즐겨찾기의 `Bambu PLA Basic - <색>` 을 바디에 끌어다 놓기 (화면 색)
@@ -72,6 +74,8 @@ Adds every Bambu Lab filament to Autodesk Fusion: one **Appearance per color** (
 Keep *Recolor thumbnails* checked to recolor the white Favorites thumbnails: the fix runs right after you close Fusion (the API cannot re-render thumbnails, so the images inside `Favorites.adsklib` are tinted; a backup is kept).
 
 **Run again any time** to add newly released colors; items already in Favorites are skipped. Fusion's API cannot overwrite Favorites, so if the dialog reports outdated entries, remove those listed in `last_report.txt` from Favorites and run again.
+
+**Reset / uninstall**: *Reset (remove all)* → tick → *Schedule reset* → close Fusion. All Bambu items are removed from Favorites (backup kept); other favorites are added back on the next run.
 
 **Use**: assign `Bambu <line>` as the Physical Material (mass, simulation) and drag `Bambu <line> - <color>` from Appearance onto the body (look).
 

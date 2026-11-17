@@ -30,6 +30,10 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
 
 Run it again any time to add newly released colors. / 새 색상이 궁금하면 다시 실행하세요.
 
+**Reset / 리셋**: **Reset (remove all)** in the window → tick → **Schedule reset** → close Fusion. Every Bambu item is removed from Favorites (backup kept; other favorites are added back on the next run). / 선택 창의 **리셋 (모두 제거)** → 체크 → **리셋 예약** → Fusion 종료.
+
+The data is checked against Bambu Lab's official color table every day, and new filaments are published here as a new release. / 매일 Bambu 공식 데이터를 확인해 새 필라멘트가 나오면 새 릴리스로 올라옵니다.
+
 Full guides: [English](BambuFilamentLibrary/README_EN.txt) · [한국어](BambuFilamentLibrary/README_KO.txt)
 
 ## Use / 사용

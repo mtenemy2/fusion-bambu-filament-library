@@ -346,9 +346,27 @@ def make_payload(data, source, colors_state, mats_state):
                          UTS=r["tensile_mpa"], nozzle=r["nozzle_c"], source=r["mech_source"], ncolors=len(rs),
                          installed=inst, stale=st))
     version, updated = version_info()
+    fav = favorites_summary(adsk.core.Application.get())
     return dict(source=source, families=fams, colors=cols, materials=mats,
                 recolor_available=bool(RECOLOR_THUMBNAILS and helper_python()),
-                version=version, updated=updated, author=AUTHOR, links=LINKS)
+                version=version, updated=updated, author=AUTHOR, links=LINKS,
+                favorites=dict(bambu_appearances=len(fav["bambu_appearances"]), bambu_materials=len(fav["bambu_materials"]),
+                               other_appearances=len(fav["appearances"]), other_materials=len(fav["materials"])),
+                reset_available=bool(helper_python()), reset_pending=os.path.exists(os.path.join(HERE, "reset_request.json")))
+
+
+def is_bambu(name):
+    return name.startswith(PREFIX + " ")
+
+
+def favorites_summary(app):
+    """Names of the Bambu items and of every other item in Favorites."""
+    out = dict(bambu_appearances=[], bambu_materials=[], appearances=[], materials=[])
+    for coll, kind in ((app.favoriteAppearances, "appearances"), (app.favoriteMaterials, "materials")):
+        for i in range(coll.count):
+            n = coll.item(i).name
+            out[("bambu_" + kind) if is_bambu(n) else kind].append(n)
+    return out
 
 
 def version_info():
@@ -464,8 +482,14 @@ def schedule_thumbnail_fix(app, ui, title, ask=True):
         if ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
                          adsk.core.MessageBoxIconTypes.QuestionIconType) != adsk.core.DialogResults.DialogYes:
             return False
+    launch_helper(py, "thumbs.py")
+    return True
+
+
+def launch_helper(py, script):
+    """Start a helper script that waits for Fusion to close (Fusion holds Favorites.adsklib while running)."""
     import subprocess
-    args = [py, "-I", os.path.join(HERE, "thumbs.py"), "--wait-pid", str(os.getpid())]
+    args = [py, "-I", os.path.join(HERE, script), "--wait-pid", str(os.getpid())]
     kw = dict(cwd=HERE, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
     if sys.platform == "win32":
         flags = 0x00000008 | 0x00000200 | 0x08000000                 # detached, new group, no window
@@ -475,8 +499,120 @@ def schedule_thumbnail_fix(app, ui, title, ask=True):
             subprocess.Popen(args, creationflags=flags, **kw)
     else:
         subprocess.Popen(args, start_new_session=True, **kw)
-    log("thumbnail fix scheduled:", args)
+    log("helper scheduled:", args)
+
+
+def schedule_reset(app, ui, title):
+    """Reset / uninstall: remove every Bambu item from Favorites when Fusion closes (the API cannot remove
+    favorites). Other favorites are recorded and added back from the backup on the next run."""
+    py = helper_python()
+    if not py:
+        ui.messageBox("Reset is not available: Fusion's bundled Python was not found.", title)
+        return False
+    fav = favorites_summary(app)
+    with open(os.path.join(HERE, "reset_request.json"), "w", encoding="utf-8") as f:
+        json.dump({"keep": {"appearances": fav["appearances"], "materials": fav["materials"]},
+                   "bambu": len(fav["bambu_appearances"]) + len(fav["bambu_materials"])}, f, ensure_ascii=False, indent=1)
+    launch_helper(py, "reset.py")
+    ui.messageBox(
+        "Reset scheduled.\n\nCLOSE Fusion now: about 10 seconds after it closes, all %d Bambu items are removed "
+        "from Favorites (a backup of the Favorites library is kept).\n"
+        "%s"
+        "\n\n리셋이 예약되었습니다. Fusion을 종료하면 약 10초 뒤 Bambu 항목 %d개가 즐겨찾기에서 제거됩니다 (백업 보관)."
+        % (len(fav["bambu_appearances"]) + len(fav["bambu_materials"]),
+           ("Your other %d favorites are added back the next time you run this script.\n"
+            "다른 즐겨찾기 %d개는 이 스크립트를 다음에 실행할 때 다시 추가됩니다."
+            % ((len(fav["appearances"]) + len(fav["materials"]),) * 2)) if (fav["appearances"] or fav["materials"]) else "",
+           len(fav["bambu_appearances"]) + len(fav["bambu_materials"])), title)
     return True
+
+
+def loadable_copy(src, dst, deep=False):
+    """Copy a Favorites library under new identifiers so Fusion can load it next to the live Favorites
+    (loading an identical copy fails with 'bLoaded'). deep=True also renames the library's root folder id."""
+    import re, uuid, zipfile
+    new_pkg = str(uuid.uuid4()).upper()
+    with zipfile.ZipFile(src) as zi:
+        names = zi.namelist()
+        root = names[0].split("/")[0] if "/" in names[0] else next(n.split("/")[0] for n in names if "/" in n)
+        new_root = str(uuid.uuid4()).upper() if deep else root
+        with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as zo:
+            for info in zi.infolist():
+                data = zi.read(info.filename)
+                name = info.filename
+                if name == "core.xml":      # package identifier
+                    data = re.sub(rb'(<uuid name="identifier">)[0-9A-Fa-f-]{36}(</uuid>)',
+                                  lambda m: m.group(1) + new_pkg.encode() + m.group(2), data)
+                if deep:
+                    name = name.replace(root, new_root)
+                    data = data.replace(root.encode(), new_root.encode())    # same length, safe in binaries
+                ni = zipfile.ZipInfo(name, info.date_time)
+                ni.compress_type, ni.external_attr = info.compress_type, info.external_attr
+                zo.writestr(ni, data)
+
+
+def restore_after_reset(app, ui, title):
+    """After a reset, add the non-Bambu favorites back from the backup library."""
+    sp = os.path.join(HERE, "reset_state.json")
+    if not os.path.exists(sp):
+        return
+    st = json.load(open(sp, encoding="utf-8"))
+    if not st.get("restore_pending"):
+        return
+    keep, backup = st.get("keep") or {}, st.get("backup", "")
+    added, missing = 0, []
+    lib = None
+    try:
+        errors = []
+        for i, deep in enumerate((True, False)):   # a copy with new ids loads next to the live Favorites
+            src = os.path.join(HERE, "restore_source_%d.adsklib" % i)
+            try:
+                loadable_copy(backup, src, deep)
+                lib = app.materialLibraries.load(src)
+                log("restore: loaded backup copy (deep=%s): %s" % (deep, lib.name))
+                break
+            except Exception as e:
+                errors.append(str(e))
+                log("restore: load failed (deep=%s): %s" % (deep, e))
+        if not lib:
+            raise Exception("could not load the backup library: " + " / ".join(errors))
+        favA, favM = app.favoriteAppearances, app.favoriteMaterials
+        for name in keep.get("appearances", []):
+            a = by_name(lib.appearances, name)
+            if a and not by_name(favA, name) and favA.add(a):
+                added += 1
+            elif not a:
+                missing.append(name)
+        for name in keep.get("materials", []):
+            m = by_name(lib.materials, name)
+            if m and not by_name(favM, name) and favM.add(m):
+                added += 1
+            elif not m:
+                missing.append(name)
+    except Exception:
+        log("restore after reset failed:", traceback.format_exc())
+        missing.append("(error - see last_run_log.txt)")
+    finally:
+        try:
+            if lib:
+                lib.unload()
+        except Exception:
+            pass
+        for i in (0, 1):
+            try:
+                os.remove(os.path.join(HERE, "restore_source_%d.adsklib" % i))
+            except OSError:
+                pass
+    st["attempts"] = st.get("attempts", 0) + 1
+    st["restore_pending"] = bool(lib is None and st["attempts"] < 3)
+    st["restored"], st["not_restored"] = added, missing
+    with open(sp, "w", encoding="utf-8") as f:
+        json.dump(st, f, ensure_ascii=False, indent=1)
+    log("Restored %d other favorites after reset; not found: %s" % (added, missing))
+    msg = "Reset finished. %d of your other favorites were added back.\n리셋 완료: 다른 즐겨찾기 %d개를 다시 추가했습니다." % (added, added)
+    if missing:
+        msg += ("\n\nNot restored / 복원하지 못한 항목: %s\nBackup / 백업: %s" % (", ".join(missing[:10]), backup))
+    ui.messageBox(msg, title)
 
 
 def finish_message(ui, title, made_a, made_m, fav_added, scheduled, stale_n):
@@ -533,7 +669,7 @@ class _HTMLHandler(adsk.core.HTMLEventHandler):
                     import webbrowser
                     webbrowser.open(url)
                 a.returnData = "OK"
-            elif a.action in ("install", "cancel"):
+            elif a.action in ("install", "cancel", "reset"):
                 STATE["selection"] = json.loads(a.data or "{}")
                 a.returnData = "OK"
                 adsk.core.Application.get().fireCustomEvent(EVENT_ID, a.action)
@@ -553,6 +689,13 @@ class _InstallHandler(adsk.core.CustomEventHandler):
         ui = app.userInterface
         title = "Bambu Lab Filament Library"
         try:
+            if args.additionalInfo == "reset" and not STATE.get("busy"):
+                STATE["busy"] = True
+                pal = ui.palettes.itemById(PALETTE_ID)
+                if pal:
+                    pal.isVisible = False
+                schedule_reset(app, ui, title)
+                return
             if args.additionalInfo != "install" or STATE.get("busy"):
                 _finish()
                 return
@@ -613,6 +756,7 @@ def run(context):
     ui = app.userInterface
     title = "Bambu Lab Filament Library"
     try:
+        restore_after_reset(app, ui, title)
         data, source, notes = bambu_data.load(HERE, online=ONLINE_UPDATE)
         for n in notes:
             log("note:", n)
