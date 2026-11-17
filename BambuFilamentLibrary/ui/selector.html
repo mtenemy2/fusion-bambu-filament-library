@@ -1,0 +1,391 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bambu Lab Filament Library</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --panel: #ffffff; --line: #e1e4e8; --text: #1d2125; --muted: #6b7280;
+    --accent: #00ae42; --accent-weak: #e3f6ea; --warn: #b45309; --warn-weak: #fef3c7; --hover: #f0f2f5;
+    --ring-bg: #eceef1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 13px/1.4 "Segoe UI", "Malgun Gothic", -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  body { display: flex; flex-direction: column; }
+  header { padding: 12px 14px 8px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  h1 { font-size: 15px; margin: 0 0 2px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 11.5px; }
+  .search { margin-top: 10px; position: relative; }
+  .search input { width: 100%; padding: 7px 30px 7px 30px; border: 1px solid var(--line); border-radius: 6px;
+    font: inherit; background: #fff; outline: none; }
+  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-weak); }
+  .search svg { position: absolute; left: 9px; top: 9px; }
+  .search button { position: absolute; right: 6px; top: 5px; border: 0; background: none; font-size: 16px;
+    color: var(--muted); cursor: pointer; display: none; }
+  .tabs { display: flex; gap: 2px; margin-top: 10px; }
+  .tab { flex: 1; padding: 7px 8px; border: 1px solid var(--line); border-bottom: 0; border-radius: 6px 6px 0 0;
+    background: var(--bg); cursor: pointer; text-align: center; font-weight: 600; color: var(--muted); }
+  .tab.on { background: var(--panel); color: var(--text); box-shadow: inset 0 2px 0 var(--accent); }
+  .tab .n { font-weight: 400; color: var(--muted); margin-left: 4px; }
+  .toolbar { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--panel);
+    border-bottom: 1px solid var(--line); }
+  .toolbar .grow { flex: 1; color: var(--muted); }
+  main { flex: 1; overflow-y: auto; padding: 8px 10px 12px; }
+  .fam { margin: 6px 0 10px; }
+  .fam-h { display: flex; align-items: center; gap: 8px; padding: 6px 6px; font-weight: 700; font-size: 12px;
+    letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+  .fam-h .grow { flex: 1; }
+  .line { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 6px 0; overflow: hidden; }
+  .line-h { display: flex; align-items: center; gap: 10px; padding: 8px 10px; cursor: pointer; user-select: none; }
+  .line-h:hover { background: var(--hover); }
+  .chev { width: 14px; transition: transform .15s; color: var(--muted); flex: none; }
+  .line.open .chev { transform: rotate(90deg); }
+  .line-name { font-weight: 600; min-width: 130px; }
+  .strip { display: flex; flex: 1; min-width: 0; overflow: hidden; }
+  .strip i { width: 14px; height: 14px; border-radius: 50%; margin-right: -3px; border: 1.5px solid #fff; flex: none;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .cnt { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .items { display: none; border-top: 1px solid var(--line); padding: 6px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 4px; }
+  .line.open .items { display: grid; }
+  .item { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+  .item:hover { background: var(--hover); }
+  .item .txt { flex: 1; min-width: 0; }
+  .item .nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item .meta { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .badge { display: inline-block; font-size: 10px; padding: 0 5px; border-radius: 8px; margin-left: 4px; vertical-align: 1px;
+    font-weight: 600; background: var(--accent-weak); color: #087a34; }
+  .badge.stale { background: var(--warn-weak); color: var(--warn); }
+  .mat { display: flex; align-items: center; gap: 12px; padding: 9px 12px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; margin: 6px 0; cursor: pointer; }
+  .mat:hover { background: var(--hover); }
+  .mat .txt { flex: 1; min-width: 0; }
+  .mat .nm { font-weight: 600; }
+  .mat .meta { color: var(--muted); font-size: 11px; }
+  /* toggle switch */
+  .sw { position: relative; width: 34px; height: 19px; flex: none; border-radius: 10px; background: #c9ced6; border: 0;
+    padding: 0; cursor: pointer; transition: background .15s; }
+  .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: left .15s; }
+  .sw[aria-checked="true"] { background: var(--accent); }
+  .sw[aria-checked="true"]::after { left: 17px; }
+  .sw[aria-checked="mixed"] { background: #8fd3a8; }
+  .sw[aria-checked="mixed"]::after { left: 9.5px; }
+  .sw:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .lbl { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; }
+  footer { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--panel); border-top: 1px solid var(--line); }
+  footer .grow { flex: 1; min-width: 0; }
+  footer label { display: flex; align-items: center; gap: 6px; color: var(--text); font-size: 12px; cursor: pointer; }
+  footer .note { color: var(--muted); font-size: 11px; }
+  .btn { padding: 7px 16px; border-radius: 6px; border: 1px solid var(--line); background: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:disabled { background: #a7d8b8; border-color: #a7d8b8; cursor: default; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 10px; }
+  .loading { text-align: center; color: var(--muted); padding: 60px 10px; }
+  mark { background: #fff2a8; color: inherit; border-radius: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Bambu Lab Filament Library</h1>
+  <div class="sub" id="source"></div>
+  <div class="search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="text" autocomplete="off" spellcheck="false">
+    <button id="qclear" title="clear">×</button>
+  </div>
+  <div class="tabs">
+    <div class="tab on" data-tab="fil" id="tabFil"></div>
+    <div class="tab" data-tab="mat" id="tabMat"></div>
+  </div>
+</header>
+<div class="toolbar">
+  <div class="lbl" id="allWrap"><button class="sw" id="all" role="switch" aria-checked="false"></button><span id="allLbl"></span></div>
+  <div class="grow" id="selInfo"></div>
+  <a href="#" id="expand" style="color:var(--muted);font-size:12px"></a>
+</div>
+<main id="list"><div class="loading" id="loading">Loading…</div></main>
+<footer>
+  <div class="grow">
+    <label><input type="checkbox" id="recolor" checked> <span id="recolorLbl"></span></label>
+    <div class="note" id="footNote"></div>
+  </div>
+  <button class="btn" id="cancel"></button>
+  <button class="btn primary" id="install"></button>
+</footer>
+
+<script>
+"use strict";
+const KO = (navigator.language || "").toLowerCase().startsWith("ko");
+const T = KO ? {
+  title: "Bambu Lab 필라멘트 라이브러리", fil: "필라멘트 (색상)", mat: "물리 재질", search: "검색: 이름, 색상 코드, HEX, 제품 라인…",
+  all: "전체 선택", selInfo: (a, b) => `${a} / ${b} 선택`, expand: "모두 펼치기", collapse: "모두 접기",
+  installed: "설치됨", stale: "값 변경", recolor: "설치 후 썸네일을 실제 색으로 바꾸기", recolorNote: "Fusion을 종료하면 적용됩니다 (백업 보관)",
+  cancel: "취소", install: (a, b) => `설치 (색상 ${a} · 재질 ${b})`, none: "검색 결과가 없습니다", source: "데이터: ",
+  matMeta: (r) => `밀도 ${r.density} g/cm³ · 영률 ${r.E} MPa · 인장 ${r.UTS} MPa${r.nozzle ? " · 노즐 " + r.nozzle + "°C" : ""}`,
+  colors: (n) => `색상 ${n}개`, staleTip: "즐겨찾기에 있는 값이 최신 데이터와 다릅니다. 즐겨찾기에서 지운 뒤 설치하면 갱신됩니다.",
+  installedTip: "이미 즐겨찾기에 있습니다", working: "설치하는 중…"
+} : {
+  title: "Bambu Lab Filament Library", fil: "Filaments (colors)", mat: "Physical materials", search: "Search: name, color code, hex, product line…",
+  all: "Select all", selInfo: (a, b) => `${a} of ${b} selected`, expand: "Expand all", collapse: "Collapse all",
+  installed: "installed", stale: "outdated", recolor: "Recolor thumbnails to the real colors", recolorNote: "Applied when you close Fusion (backup kept)",
+  cancel: "Cancel", install: (a, b) => `Install (${a} colors · ${b} materials)`, none: "No matches", source: "Data: ",
+  matMeta: (r) => `density ${r.density} g/cm³ · E ${r.E} MPa · UTS ${r.UTS} MPa${r.nozzle ? " · nozzle " + r.nozzle + "°C" : ""}`,
+  colors: (n) => `${n} colors`, staleTip: "The copy in Favorites differs from the latest data. Remove it from Favorites, then install to refresh.",
+  installedTip: "Already in Favorites", working: "Installing…"
+};
+
+let D = null;                 // payload from Fusion
+let tab = "fil";
+const selC = new Set();       // selected color codes
+const selM = new Set();       // selected material (line) names
+const openLines = new Set();
+let query = "";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function hl(s) {
+  s = esc(s);
+  if (!query) return s;
+  const i = s.toLowerCase().indexOf(query);
+  return i < 0 ? s : s.slice(0, i) + "<mark>" + s.slice(i, i + query.length) + "</mark>" + s.slice(i + query.length);
+}
+
+// ---------- thumbnails (SVG spool ends, styled per finish) ----------
+let gid = 0;
+function shade(hex, f) {
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const m = (c) => Math.max(0, Math.min(255, Math.round(f >= 0 ? c + (255 - c) * f : c * (1 + f))));
+  return "#" + [m(r), m(g), m(b)].map(v => v.toString(16).padStart(2, "0")).join("");
+}
+function swatch(hexes, style, alpha, size) {
+  size = size || 40;
+  const id = "g" + (gid++);
+  const h0 = (alpha && alpha[0] === 0) ? "#eef3f6" : hexes[0];
+  let defs = "", fill;
+  if (hexes.length > 1) {
+    const stops = hexes.map((h, i) => `<stop offset="${i / (hexes.length - 1)}" stop-color="${h}"/>`).join("");
+    defs = `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">${stops}</linearGradient>`;
+    fill = `url(#${id})`;
+  } else if (style === "metal") {
+    defs = `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(h0, .45)}"/><stop offset=".45" stop-color="${h0}"/><stop offset=".7" stop-color="${shade(h0, -.35)}"/><stop offset="1" stop-color="${shade(h0, .15)}"/></linearGradient>`;
+    fill = `url(#${id})`;
+  } else if (style === "matte") {
+    defs = `<radialGradient id="${id}" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="${shade(h0, .08)}"/><stop offset="1" stop-color="${shade(h0, -.12)}"/></radialGradient>`;
+    fill = `url(#${id})`;
+  } else {
+    defs = `<radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${shade(h0, .3)}"/><stop offset=".55" stop-color="${h0}"/><stop offset="1" stop-color="${shade(h0, -.25)}"/></radialGradient>`;
+    fill = `url(#${id})`;
+  }
+  const op = style === "translucent" ? ' fill-opacity=".62"' : "";
+  const checker = style === "translucent"
+    ? `<pattern id="${id}c" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#fff"/><rect width="4" height="4" fill="#d9dde3"/><rect x="4" y="4" width="4" height="4" fill="#d9dde3"/></pattern>` : "";
+  let extra = "";
+  if (style === "glossy" || style === "silk" || style === "translucent")
+    extra += `<ellipse cx="14" cy="11.5" rx="6.5" ry="3.2" fill="#fff" opacity="${style === "silk" ? .65 : .45}" transform="rotate(-30 14 11.5)"/>`;
+  if (style === "silk")
+    extra += `<path d="M7 27 A14 14 0 0 0 33 27" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>`;
+  if (style === "sparkle")
+    extra += [[12, 14], [26, 11], [29, 25], [15, 28], [21, 20]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1" fill="#fff" opacity=".9"/>`).join("");
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" style="flex:none"><defs>${defs}${checker}</defs>` +
+    (checker ? `<circle cx="20" cy="20" r="18" fill="url(#${id}c)"/>` : "") +
+    `<circle cx="20" cy="20" r="18" fill="${fill}"${op} stroke="rgba(0,0,0,.12)"/>${extra}` +
+    `<circle cx="20" cy="20" r="5.2" fill="var(--ring-bg)" stroke="rgba(0,0,0,.15)"/></svg>`;
+}
+function matThumb(line) {
+  const cols = D.colors.filter(c => c.line === line).slice(0, 4);
+  const n = Math.max(cols.length, 1), step = 8, r = 10;
+  const x0 = (46 - (2 * r + (n - 1) * step)) / 2 + r;
+  let s = `<svg width="46" height="44" viewBox="0 0 46 44" style="flex:none">`;
+  cols.forEach((c, i) => {
+    s += `<circle cx="${x0 + i * step}" cy="14" r="${r}" fill="${(c.alpha && c.alpha[0] === 0) ? "#eef3f6" : c.hex[0]}" stroke="#fff" stroke-width="1.5"/>`;
+  });
+  return s + `<rect x="3" y="31" width="40" height="11" rx="3" fill="#3a3f47"/><text x="23" y="39.4" font-size="7.5" font-weight="600" fill="#fff" text-anchor="middle" font-family="Segoe UI, sans-serif">${esc(D.materials.find(m => m.line === line).family)}</text></svg>`;
+}
+
+// ---------- filtering ----------
+function colorMatch(c) {
+  if (!query) return true;
+  return [c.name_en, c.name_ko, c.code, c.hex.join(" "), c.line, c.family, "bambu " + c.line + " " + c.name_en]
+    .some(s => String(s).toLowerCase().includes(query));
+}
+function matMatch(m) {
+  if (!query) return true;
+  return [m.line, m.family, "bambu " + m.line].some(s => s.toLowerCase().includes(query));
+}
+const visibleColors = () => D.colors.filter(colorMatch);
+const visibleMats = () => D.materials.filter(matMatch);
+
+function swState(list, set, key) {
+  const n = list.filter(x => set.has(x[key])).length;
+  return n === 0 ? "false" : (n === list.length ? "true" : "mixed");
+}
+
+// ---------- render ----------
+function render() {
+  const list = $("list");
+  let html = "";
+  if (tab === "fil") {
+    const vis = visibleColors();
+    if (!vis.length) html = `<div class="empty">${T.none}</div>`;
+    for (const fam of D.families) {
+      const fc = vis.filter(c => c.family === fam);
+      if (!fc.length) continue;
+      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span><span class="cnt">${fc.filter(c => selC.has(c.code)).length}/${fc.length}</span>` +
+        `<button class="sw" role="switch" aria-checked="${swState(fc, selC, "code")}" data-fam="${esc(fam)}"></button></div>`;
+      const lines = [...new Set(fc.map(c => c.line))];
+      for (const line of lines) {
+        const lc = fc.filter(c => c.line === line);
+        const open = openLines.has(line) || (query && lc.length <= 40);
+        html += `<div class="line${open ? " open" : ""}" data-line="${esc(line)}"><div class="line-h">` +
+          `<svg class="chev" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>` +
+          `<span class="line-name">${hl(line)}</span><span class="strip">${lc.slice(0, 24).map(c => `<i style="background:${(c.alpha && c.alpha[0] === 0) ? "#eef3f6" : c.hex[0]}"></i>`).join("")}</span>` +
+          `<span class="cnt">${lc.filter(c => selC.has(c.code)).length}/${lc.length}</span>` +
+          `<button class="sw" role="switch" aria-checked="${swState(lc, selC, "code")}" data-lineSw="${esc(line)}"></button></div>`;
+        if (open) {
+          html += `<div class="items">`;
+          for (const c of lc) {
+            const badge = c.stale ? `<span class="badge stale" title="${esc(T.staleTip)}">${T.stale}</span>` :
+              (c.installed ? `<span class="badge" title="${esc(T.installedTip)}">${T.installed}</span>` : "");
+            const name = KO && c.name_ko && c.name_ko !== c.name_en ? `${hl(c.name_ko)} <span style="color:var(--muted);font-weight:400">${hl(c.name_en)}</span>` : hl(c.name_en);
+            html += `<div class="item" data-code="${c.code}" title="${esc(c.name_en)} ${esc(c.hex.join(" → "))}">${swatch(c.hex, c.style, c.alpha)}` +
+              `<div class="txt"><div class="nm">${name}${badge}</div><div class="meta">${hl(c.code)} · ${hl(c.hex.join(" → "))}</div></div>` +
+              `<button class="sw" role="switch" aria-checked="${selC.has(c.code)}" data-code="${c.code}"></button></div>`;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
+      }
+      html += `</section>`;
+    }
+    const all = D.colors.length;
+    $("selInfo").textContent = T.selInfo(selC.size, all);
+    $("all").setAttribute("aria-checked", swState(vis, selC, "code"));
+    $("expand").style.display = "";
+  } else {
+    const vis = visibleMats();
+    if (!vis.length) html = `<div class="empty">${T.none}</div>`;
+    for (const fam of D.families) {
+      const fm = vis.filter(m => m.family === fam);
+      if (!fm.length) continue;
+      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span><span class="cnt">${fm.filter(m => selM.has(m.line)).length}/${fm.length}</span>` +
+        `<button class="sw" role="switch" aria-checked="${swState(fm, selM, "line")}" data-mfam="${esc(fam)}"></button></div>`;
+      for (const m of fm) {
+        const badge = m.stale ? `<span class="badge stale" title="${esc(T.staleTip)}">${T.stale}</span>` :
+          (m.installed ? `<span class="badge" title="${esc(T.installedTip)}">${T.installed}</span>` : "");
+        html += `<div class="mat" data-mat="${esc(m.line)}" title="${esc(m.source)}">${matThumb(m.line)}<div class="txt">` +
+          `<div class="nm">Bambu ${hl(m.line)}${badge}</div><div class="meta">${esc(T.matMeta(m))}</div>` +
+          `<div class="meta">${esc(T.colors(m.ncolors))} · ${esc(m.source)}</div></div>` +
+          `<button class="sw" role="switch" aria-checked="${selM.has(m.line)}" data-mat="${esc(m.line)}"></button></div>`;
+      }
+      html += `</section>`;
+    }
+    $("selInfo").textContent = T.selInfo(selM.size, D.materials.length);
+    $("all").setAttribute("aria-checked", swState(vis, selM, "line"));
+    $("expand").style.display = "none";
+  }
+  list.innerHTML = html;
+  $("tabFil").innerHTML = `${T.fil}<span class="n">${selC.size}/${D.colors.length}</span>`;
+  $("tabMat").innerHTML = `${T.mat}<span class="n">${selM.size}/${D.materials.length}</span>`;
+  $("install").textContent = T.install(selC.size, selM.size);
+  $("install").disabled = selC.size + selM.size === 0;
+  $("expand").textContent = openLines.size ? T.collapse : T.expand;
+}
+
+function setMany(set, keys, on) { keys.forEach(k => on ? set.add(k) : set.delete(k)); }
+const next = (el) => el.getAttribute("aria-checked") !== "true";
+
+// ---------- events ----------
+$("list").addEventListener("click", (e) => {
+  const sw = e.target.closest(".sw");
+  if (sw) {
+    e.stopPropagation();
+    const on = next(sw);
+    if (sw.dataset.code) setMany(selC, [sw.dataset.code], on);
+    else if (sw.dataset.linesw) setMany(selC, visibleColors().filter(c => c.line === sw.dataset.linesw).map(c => c.code), on);
+    else if (sw.dataset.fam) setMany(selC, visibleColors().filter(c => c.family === sw.dataset.fam).map(c => c.code), on);
+    else if (sw.dataset.mat) setMany(selM, [sw.dataset.mat], on);
+    else if (sw.dataset.mfam) setMany(selM, visibleMats().filter(m => m.family === sw.dataset.mfam).map(m => m.line), on);
+    return render();
+  }
+  const item = e.target.closest(".item");
+  if (item) { const c = item.dataset.code; selC.has(c) ? selC.delete(c) : selC.add(c); return render(); }
+  const mat = e.target.closest(".mat");
+  if (mat) { const m = mat.dataset.mat; selM.has(m) ? selM.delete(m) : selM.add(m); return render(); }
+  const lh = e.target.closest(".line-h");
+  if (lh) {
+    const line = lh.parentElement.dataset.line;
+    openLines.has(line) ? openLines.delete(line) : openLines.add(line);
+    render();
+  }
+});
+$("allWrap").addEventListener("click", () => {
+  const on = next($("all"));
+  if (tab === "fil") setMany(selC, visibleColors().map(c => c.code), on);
+  else setMany(selM, visibleMats().map(m => m.line), on);
+  render();
+});
+$("expand").addEventListener("click", (e) => {
+  e.preventDefault();
+  if (openLines.size) openLines.clear(); else D.colors.forEach(c => openLines.add(c.line));
+  render();
+});
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  tab = t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
+  $("list").scrollTop = 0;
+  render();
+}));
+$("q").addEventListener("input", () => {
+  query = $("q").value.trim().toLowerCase();
+  $("qclear").style.display = query ? "block" : "none";
+  render();
+});
+$("qclear").addEventListener("click", () => { $("q").value = ""; query = ""; $("qclear").style.display = "none"; render(); $("q").focus(); });
+
+function send(action, data) {
+  if (window.adsk && adsk.fusionSendData) return adsk.fusionSendData(action, JSON.stringify(data || {}));
+  console.log("send", action, data);
+  return Promise.resolve("");
+}
+$("cancel").addEventListener("click", () => send("cancel"));
+$("install").addEventListener("click", () => {
+  $("install").disabled = true;
+  $("install").textContent = T.working;
+  send("install", { colors: [...selC], materials: [...selM], recolor: $("recolor").checked });
+});
+
+// ---------- init ----------
+function init(payload) {
+  D = typeof payload === "string" ? JSON.parse(payload) : payload;
+  $("loading") && $("loading").remove();
+  $("source").textContent = T.source + D.source + " · " + D.colors.length + " / " + D.materials.length;
+  D.colors.forEach(c => { if (!c.installed) selC.add(c.code); });
+  D.materials.forEach(m => { if (!m.installed) selM.add(m.line); });
+  if (!D.recolor_available) { $("recolor").checked = false; $("recolor").disabled = true; }
+  render();
+}
+document.title = T.title;
+$("title").textContent = T.title;
+$("q").placeholder = T.search;
+$("allLbl").textContent = T.all;
+$("recolorLbl").textContent = T.recolor;
+$("footNote").textContent = T.recolorNote;
+$("cancel").textContent = T.cancel;
+window.fusionJavaScriptHandler = { handle: (action, data) => { if (action === "data") init(data); return "OK"; } };
+
+if (window.BAMBU_DEMO) {
+  init(window.BAMBU_DEMO);
+} else {
+  let tries = 0;
+  const ask = setInterval(() => {
+    if (window.adsk && adsk.fusionSendData) {
+      clearInterval(ask);
+      adsk.fusionSendData("ready", "{}").then(r => { if (r) init(r); });
+    } else if (++tries > 100) { clearInterval(ask); $("loading").textContent = "Fusion connection not available."; }
+  }, 100);
+}
+</script>
+</body>
+</html>

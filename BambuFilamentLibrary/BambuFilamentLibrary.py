@@ -19,6 +19,7 @@ FAMILIES = None                  # None = all; or e.g. ("PLA", "PETG", "ABS", "A
 PREFIX = "Bambu"
 TEST_MODE = False                # True: build only a small sample, for checking
 RECOLOR_THUMBNAILS = True        # offer to recolor the white Favorites thumbnails (runs after Fusion closes)
+SHOW_SELECTOR = True             # show the selection window (False: add everything missing, no window)
 
 LOG = []
 
@@ -291,32 +292,152 @@ def helper_python():
     return None
 
 
-def offer_thumbnail_fix(app, ui, title):
+def read_state(app, data):
+    """Mark records/lines that are already in Favorites, and those whose Favorites copy is outdated."""
+    favA, favM = app.favoriteAppearances, app.favoriteMaterials
+    mats = {}
+    for r in data:
+        mn = material_name(r)
+        if mn not in mats:
+            fm = by_name(favM, mn)
+            st = False
+            if fm:
+                d = read_density(fm)
+                st = d is not None and abs(d - r["density"]) > 0.005
+            mats[mn] = (bool(fm), st)
+    colors = {}
+    for r in data:
+        fa = by_name(favA, entry_name(r))
+        st = False
+        if fa:
+            h = read_hex(fa)
+            st = bool(h and h != target_hex(r))
+        colors[r["color_code"]] = (bool(fa), st)
+    return colors, mats
+
+
+def make_payload(data, source, colors_state, mats_state):
+    fams, lines = [], {}
+    for r in data:
+        if r["family"] not in fams:
+            fams.append(r["family"])
+        lines.setdefault(r["line"], []).append(r)
+    cols = [dict(code=r["color_code"], line=r["line"], family=r["family"], name_en=r["name_en"], name_ko=r["name_ko"],
+                 hex=r["hex"], alpha=r["alpha"], style=r["style"], installed=colors_state[r["color_code"]][0],
+                 stale=colors_state[r["color_code"]][1]) for r in data]
+    mats = []
+    for line, rs in lines.items():
+        r = rs[0]
+        inst, st = mats_state[material_name(r)]
+        mats.append(dict(line=line, family=r["family"], density=round(r["density"], 3), E=round(r["youngs_mpa"]),
+                         UTS=r["tensile_mpa"], nozzle=r["nozzle_c"], source=r["mech_source"], ncolors=len(rs),
+                         installed=inst, stale=st))
+    return dict(source=source, families=fams, colors=cols, materials=mats,
+                recolor_available=bool(RECOLOR_THUMBNAILS and helper_python()))
+
+
+def build(app, ui, title, data, codes, lines):
+    """Create the selected color appearances and line materials in a new design and add them to Favorites."""
+    todo = [r for r in data if r["color_code"] in codes]
+    mat_rows = {}
+    for r in data:
+        if r["line"] in lines and r["line"] not in mat_rows:
+            mat_rows[r["line"]] = r
+    if not todo and not mat_rows:
+        return 0, 0, 0
+    favA, favM = app.favoriteAppearances, app.favoriteMaterials
+    app.documents.add(adsk.core.DocumentTypes.FusionDesignDocumentType)
+    design = adsk.fusion.Design.cast(app.activeProduct)
+    um = design.unitsManager
+    libs = app.materialLibraries
+    app_libs = [libs.item(i) for i in range(libs.count) if "appearance" in libs.item(i).name.lower()]
+    mat_lib = by_name(libs, "Fusion Material Library") or next(
+        (libs.item(i) for i in range(libs.count) if "material" in libs.item(i).name.lower()), None)
+    base_app = {}
+    for style in sorted({r["style"] for r in todo}):
+        a = find_appearance(app_libs, style)
+        if not a:
+            raise Exception("No base appearance found for style " + style)
+        base_app[style] = by_name(design.appearances, a.name) or design.appearances.addByCopy(a, a.name)
+        log("Base appearance", style, "->", a.name)
+    base_mat = {}
+    for fam in sorted({r["family"] for r in mat_rows.values()}):
+        base_mat[fam] = find_material(mat_lib, fam)
+        log("Base material", fam, "->", base_mat[fam].name)
+
+    prog = ui.createProgressDialog()
+    prog.isCancelButtonShown = True
+    prog.show(title, "%v / %m  " + "%p%", 0, len(todo) + len(mat_rows), 0)
+    made_a = made_m = fav_added = 0
+    step = 0
+    for r in todo:
+        if prog.wasCancelled:
+            break
+        prog.progressValue = step
+        step += 1
+        name = entry_name(r)
+        ap = by_name(design.appearances, name) or design.appearances.addByCopy(base_app[r["style"]], name)
+        cp = color_prop(ap, r["style"] == "translucent")
+        rr, gg, bb = hex_rgb(target_hex(r))
+        if cp:
+            cp.value = adsk.core.Color.create(rr, gg, bb, 255)
+        else:
+            log("  ! no color property", name)
+        for p in props_of(ap.appearanceProperties):
+            if p.id == "surface_roughness":
+                fp = adsk.core.FloatProperty.cast(p)
+                if fp and not fp.isReadOnly:
+                    fp.value = r["roughness"]
+        made_a += 1
+        if ADD_TO_FAVORITES and not by_name(favA, name) and favA.add(ap):
+            fav_added += 1
+        adsk.doEvents()
+    for line, r in mat_rows.items():
+        if prog.wasCancelled:
+            break
+        prog.progressValue = step
+        step += 1
+        mname = material_name(r)
+        mt = by_name(design.materials, mname)
+        if not mt:   # one physical material per product line (the API cannot link it to a color appearance)
+            mt = design.materials.addByCopy(base_mat[r["family"]], mname)
+            set_physical(mt, r, um)
+        made_m += 1
+        if ADD_TO_FAVORITES and not by_name(favM, mname) and favM.add(mt):
+            fav_added += 1
+        adsk.doEvents()
+    prog.hide()
+    log("Created:", made_a, "appearances,", made_m, "materials; favorites added:", fav_added)
+    return made_a, made_m, fav_added
+
+
+def schedule_thumbnail_fix(app, ui, title, ask=True):
     """Fusion cannot re-render thumbnails, so recolor them in Favorites.adsklib after Fusion closes."""
     if not RECOLOR_THUMBNAILS:
-        return
+        return False
     ids = favorite_ids(app)
     if not ids:
-        return
+        return False
     with open(os.path.join(HERE, "favorites_ids.json"), "w", encoding="utf-8") as f:
         json.dump(ids, f, indent=0)
     done_p = os.path.join(HERE, "thumbnails_done.json")
     done = set(json.load(open(done_p, encoding="utf-8"))) if os.path.exists(done_p) else set()
     todo = [c for c in ids if c not in done]
     if not todo:
-        return
+        return False
     py = helper_python()
     if not py:
         log("thumbnail fix: bundled python not found")
-        return
-    q = ("%d Bambu appearances in Favorites still show the white preview thumbnail.\n\n"
-         "Recolor them to the real filament colors?\n\n"
-         "Fusion cannot change thumbnails while it is running, so the fix runs automatically right after you\n"
-         "CLOSE Fusion (about 30 seconds). Open Fusion again afterwards to see the colored thumbnails.\n"
-         "A backup of the Favorites library is kept.") % len(todo)
-    if ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
-                     adsk.core.MessageBoxIconTypes.QuestionIconType) != adsk.core.DialogResults.DialogYes:
-        return
+        return False
+    if ask:
+        q = ("%d Bambu appearances in Favorites still show the white preview thumbnail.\n\n"
+             "Recolor them to the real filament colors?\n\n"
+             "Fusion cannot change thumbnails while it is running, so the fix runs automatically right after you\n"
+             "CLOSE Fusion (about 30 seconds). Open Fusion again afterwards to see the colored thumbnails.\n"
+             "A backup of the Favorites library is kept.") % len(todo)
+        if ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                         adsk.core.MessageBoxIconTypes.QuestionIconType) != adsk.core.DialogResults.DialogYes:
+            return False
     import subprocess
     args = [py, "-I", os.path.join(HERE, "thumbs.py"), "--wait-pid", str(os.getpid())]
     kw = dict(cwd=HERE, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
@@ -329,8 +450,127 @@ def offer_thumbnail_fix(app, ui, title):
     else:
         subprocess.Popen(args, start_new_session=True, **kw)
     log("thumbnail fix scheduled:", args)
-    ui.messageBox("OK. Close Fusion when you are ready; the thumbnails are recolored after it closes.\n"
-                  "Log: thumbnail_log.txt in the script folder.", title)
+    return True
+
+
+def finish_message(ui, title, made_a, made_m, fav_added, scheduled, stale_n):
+    msg = ("Done.\n\n%d color appearances and %d materials created (Favorites +%d).\n"
+           "Save the new design (e.g. 'Bambu Filament Library') if you want a reference file.\n\n"
+           "Use:  Physical Material > 'Bambu <line>'  (mass, simulation)\n"
+           "        Appearance > 'Bambu <line> - <color>'  (look)") % (made_a, made_m, fav_added)
+    already = made_a + made_m - fav_added
+    if ADD_TO_FAVORITES and already > 0:
+        msg = msg.replace("(Favorites +%d)." % fav_added,
+                          "(Favorites +%d, %d were already in Favorites)." % (fav_added, already))
+    if scheduled:
+        msg += "\n\nThumbnails: CLOSE Fusion to recolor them (about 30 s), then open Fusion again."
+    if stale_n:
+        msg += "\n\n%d Favorites entries are outdated - remove them from Favorites and install again to refresh." % stale_n
+    ui.messageBox(msg, title)
+
+
+# ---------- selection window (HTML palette) ----------
+PALETTE_ID = "BambuFilamentLibrarySelector"
+EVENT_ID = "BambuFilamentLibraryInstall"
+STATE = {}
+HANDLERS = []
+
+
+def _finish():
+    app = adsk.core.Application.get()
+    try:
+        pal = app.userInterface.palettes.itemById(PALETTE_ID)
+        if pal:
+            pal.deleteMe()
+    except Exception:
+        pass
+    try:
+        app.unregisterCustomEvent(EVENT_ID)
+    except Exception:
+        pass
+    write_log()
+    adsk.terminate()
+
+
+class _HTMLHandler(adsk.core.HTMLEventHandler):
+    def notify(self, args):
+        a = adsk.core.HTMLEventArgs.cast(args)
+        try:
+            if a.action == "ready":
+                a.returnData = STATE["payload"]
+            elif a.action in ("install", "cancel"):
+                STATE["selection"] = json.loads(a.data or "{}")
+                a.returnData = "OK"
+                adsk.core.Application.get().fireCustomEvent(EVENT_ID, a.action)
+        except Exception:
+            log("ERROR html", traceback.format_exc())
+
+
+class _ClosedHandler(adsk.core.UserInterfaceGeneralEventHandler):
+    def notify(self, args):
+        if not STATE.get("busy"):
+            _finish()
+
+
+class _InstallHandler(adsk.core.CustomEventHandler):
+    def notify(self, args):
+        app = adsk.core.Application.get()
+        ui = app.userInterface
+        title = "Bambu Lab Filament Library"
+        try:
+            if args.additionalInfo != "install" or STATE.get("busy"):
+                _finish()
+                return
+            STATE["busy"] = True
+            sel = STATE.get("selection") or {}
+            pal = ui.palettes.itemById(PALETTE_ID)
+            if pal:
+                pal.isVisible = False
+            codes, lines = set(sel.get("colors") or []), set(sel.get("materials") or [])
+            log("Selected:", len(codes), "colors,", len(lines), "materials")
+            made_a, made_m, fav_added = build(app, ui, title, STATE["data"], codes, lines)
+            scheduled = bool(sel.get("recolor")) and schedule_thumbnail_fix(app, ui, title, ask=False)
+            stale_n = sum(1 for c in codes if STATE["colors_state"].get(c, (0, 0))[1]) + \
+                sum(1 for l in lines if STATE["mats_state"].get("%s %s" % (PREFIX, l.replace("/", "-")), (0, 0))[1])
+            finish_message(ui, title, made_a, made_m, fav_added, scheduled, stale_n)
+        except Exception:
+            log("ERROR", traceback.format_exc())
+            ui.messageBox("Failed:\n" + traceback.format_exc(), title)
+        finally:
+            _finish()
+
+
+def show_selector(app, data, source):
+    ui = app.userInterface
+    colors_state, mats_state = read_state(app, data)
+    STATE.update(data=data, colors_state=colors_state, mats_state=mats_state, busy=False,
+                 payload=json.dumps(make_payload(data, source, colors_state, mats_state), ensure_ascii=False))
+    old = ui.palettes.itemById(PALETTE_ID)
+    if old:
+        old.deleteMe()
+    try:
+        app.unregisterCustomEvent(EVENT_ID)
+    except Exception:
+        pass
+    ev = app.registerCustomEvent(EVENT_ID)
+    h_inst = _InstallHandler()
+    ev.add(h_inst)
+    html = os.path.join(HERE, "ui", "selector.html").replace("\\", "/")
+    pal = ui.palettes.add(PALETTE_ID, "Bambu Lab Filament Library", html, True, True, True, 780, 860, True)
+    pal.dockingState = adsk.core.PaletteDockingStates.PaletteDockStateFloating
+    h_html, h_close = _HTMLHandler(), _ClosedHandler()
+    pal.incomingFromHTML.add(h_html)
+    pal.closed.add(h_close)
+    HANDLERS.extend([h_inst, h_html, h_close])
+    adsk.autoTerminate(False)
+
+
+def write_log():
+    try:
+        with open(os.path.join(HERE, "last_run_log.txt"), "w", encoding="utf-8") as f:
+            f.write("\n".join(LOG))
+    except Exception:
+        pass
 
 
 def run(context):
@@ -352,126 +592,25 @@ def run(context):
                         if r not in sample:
                             sample.append(r)
             data = sample
-
-        # ---- compare with Favorites
-        favA, favM = app.favoriteAppearances, app.favoriteMaterials
-        new_rows, stale, mats_seen = [], [], {}
-        for r in data:
-            mn = material_name(r)
-            if mn not in mats_seen:
-                fm = by_name(favM, mn)
-                mats_seen[mn] = fm
-                if fm:
-                    d = read_density(fm)
-                    if d is not None and abs(d - r["density"]) > 0.005:
-                        stale.append("material    %s  (density %.2f -> %.2f)" % (mn, d, r["density"]))
-            fa = by_name(favA, entry_name(r))
-            if fa:
-                h = read_hex(fa)
-                if h and h != target_hex(r):
-                    stale.append("appearance  %s  (%s -> %s)" % (entry_name(r), h, target_hex(r)))
-            if not fa or not mats_seen[mn]:
-                new_rows.append(r)
-        n_lines = len({r["line"] for r in data})
-        summary = ("Data: %s\n%d colors / %d product lines\n\n"
-                   "Not yet in Favorites: %d\nAlready in Favorites: %d\nOutdated in Favorites: %d\n"
-                   % (source, len(data), n_lines, len(new_rows), len(data) - len(new_rows), len(stale)))
-        if notes:
-            summary += "\n" + "\n".join(notes[:5]) + "\n"
-        if new_rows:
-            q = summary + "\nAdd the %d missing colors to Favorites now?" % len(new_rows)
-        else:
-            q = summary + "\nEverything is already in Favorites.\nBuild a full library design anyway (to save as a reference file)?"
-        res = ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType, adsk.core.MessageBoxIconTypes.QuestionIconType)
-        if res != adsk.core.DialogResults.DialogYes:
-            log("Build skipped by user")
-            offer_thumbnail_fix(app, ui, title)
-            return
-        todo = new_rows if new_rows else data
-
-        app.documents.add(adsk.core.DocumentTypes.FusionDesignDocumentType)
-        design = adsk.fusion.Design.cast(app.activeProduct)
-        um = design.unitsManager
-
-        libs = app.materialLibraries
-        app_libs = [libs.item(i) for i in range(libs.count) if "appearance" in libs.item(i).name.lower()]
-        mat_lib = by_name(libs, "Fusion Material Library") or next(
-            (libs.item(i) for i in range(libs.count) if "material" in libs.item(i).name.lower()), None)
-        log("Libraries:", [libs.item(i).name for i in range(libs.count)])
-
-        base_app = {}
-        for style in sorted({r["style"] for r in todo}):
-            a = find_appearance(app_libs, style)
-            if not a:
-                raise Exception("No base appearance found for style " + style)
-            base_app[style] = by_name(design.appearances, a.name) or design.appearances.addByCopy(a, a.name)
-            log("Base appearance", style, "->", a.name)
-        base_mat = {}
-        for fam in sorted({r["family"] for r in todo}):
-            base_mat[fam] = find_material(mat_lib, fam)
-            log("Base material", fam, "->", base_mat[fam].name)
-
-        prog = ui.createProgressDialog()
-        prog.isCancelButtonShown = True
-        prog.show(title, "%v / %m  " + "%p%", 0, len(todo), 0)
-
-        made, lines_made, fav_added = 0, [], 0
-        for i, r in enumerate(todo):
-            if prog.wasCancelled:
-                break
-            prog.progressValue = i
-            name = entry_name(r)
-
-            ap = by_name(design.appearances, name) or design.appearances.addByCopy(base_app[r["style"]], name)
-            cp = color_prop(ap, r["style"] == "translucent")
-            rr, gg, bb = hex_rgb(target_hex(r))
-            if cp:
-                cp.value = adsk.core.Color.create(rr, gg, bb, 255)
-            else:
-                log("  ! no color property", name)
-            for p in props_of(ap.appearanceProperties):
-                if p.id == "surface_roughness":
-                    fp = adsk.core.FloatProperty.cast(p)
-                    if fp and not fp.isReadOnly:
-                        fp.value = r["roughness"]
-
-            mname = material_name(r)
-            mt = by_name(design.materials, mname)
-            if not mt:      # one physical material per product line (the API cannot link it to a color appearance)
-                mt = design.materials.addByCopy(base_mat[r["family"]], mname)
-                set_physical(mt, r, um)
-                lines_made.append(mname)
-                if ADD_TO_FAVORITES and not by_name(favM, mname) and favM.add(mt):
-                    fav_added += 1
-            if ADD_TO_FAVORITES and not by_name(favA, name) and favA.add(ap):
-                fav_added += 1
-            made += 1
-            adsk.doEvents()
-        prog.hide()
-
-        log("Created:", made, "appearances,", len(lines_made), "materials; favorites added:", fav_added)
-        report = [title, "data: " + source, "created: %d appearances, %d materials" % (made, len(lines_made)),
-                  "added to Favorites: %d" % fav_added, ""]
-        if stale:
-            report += ["Outdated Favorites - remove them from Favorites, then run the script again to refresh:"]
-            report += ["  " + s for s in stale]
-        with open(os.path.join(HERE, "last_report.txt"), "w", encoding="utf-8") as f:
-            f.write("\n".join(report))
-        msg = ("Done.\n\n%d color appearances and %d line materials created%s.\n"
-               "Save this design (e.g. 'Bambu Filament Library') if you want a reference file.\n\n"
-               "Use:  Physical Material > 'Bambu <line>'  (mass, simulation)\n"
-               "        Appearance > 'Bambu <line> - <color>'  (look)") % (
-            made, len(lines_made), " (Favorites +%d)" % fav_added if ADD_TO_FAVORITES else "")
-        if stale:
-            msg += "\n\n%d Favorites entries are outdated - see last_report.txt in the script folder." % len(stale)
-        ui.messageBox(msg, title)
-        offer_thumbnail_fix(app, ui, title)
+        if SHOW_SELECTOR:
+            try:
+                show_selector(app, data, source)
+                write_log()
+                return
+            except Exception:
+                log("selector window failed, using simple dialogs:", traceback.format_exc())
+        # ---- simple fallback: everything not yet in Favorites
+        colors_state, mats_state = read_state(app, data)
+        codes = {c for c, (inst, _) in colors_state.items() if not inst}
+        lines = {r["line"] for r in data if not mats_state[material_name(r)][0]}
+        q = "Data: %s\n%d colors / %d materials not yet in Favorites.\n\nAdd them now?" % (source, len(codes), len(lines))
+        if (codes or lines) and ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                                               adsk.core.MessageBoxIconTypes.QuestionIconType) == adsk.core.DialogResults.DialogYes:
+            made_a, made_m, fav_added = build(app, ui, title, data, codes, lines)
+            finish_message(ui, title, made_a, made_m, fav_added, False, 0)
+        schedule_thumbnail_fix(app, ui, title, ask=True)
+        write_log()
     except Exception:
         log("ERROR", traceback.format_exc())
+        write_log()
         ui.messageBox("Failed:\n" + traceback.format_exc(), title)
-    finally:
-        try:
-            with open(os.path.join(HERE, "last_run_log.txt"), "w", encoding="utf-8") as f:
-                f.write("\n".join(LOG))
-        except Exception:
-            pass

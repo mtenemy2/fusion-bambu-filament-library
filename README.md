@@ -22,8 +22,11 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
    - Windows: `%APPDATA%\Autodesk\Autodesk Fusion 360\API\Scripts\`
    - macOS: `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/`
    - or in Fusion: `Shift+S` → **+** → select the folder / 또는 Fusion에서 `Shift+S` → **+** → 폴더 선택
-3. In Fusion: `Shift+S` → **BambuFilamentLibrary** → **Run** → **Yes**
-4. When asked to recolor thumbnails, click **Yes**, then close and reopen Fusion: the white preview thumbnails turn into the real filament colors. / 썸네일 색 변경 질문에 **Yes** → Fusion을 껐다 켜면 흰색 썸네일이 실제 색으로 바뀝니다.
+3. In Fusion: `Shift+S` → **BambuFilamentLibrary** → **Run**
+4. Pick what to install in the selection window, then click **Install**. / 선택 창에서 설치할 항목을 고르고 **설치**를 누릅니다.
+   - Filaments / Physical materials tabs, families with expandable product lines / [필라멘트] / [물리 재질] 탭, 계열별로 펼쳐지는 제품 라인
+   - Per-item, per-line and select-all toggles, search, color thumbnails / 항목·라인·전체 선택 토글, 검색창, 색상 썸네일
+5. With *Recolor thumbnails* checked, close and reopen Fusion: the white preview thumbnails turn into the real filament colors. / "썸네일 색 바꾸기"를 켠 채 설치 → Fusion을 껐다 켜면 흰색 썸네일이 실제 색으로 바뀝니다.
 
 Run it again any time to add newly released colors. / 새 색상이 궁금하면 다시 실행하세요.
 

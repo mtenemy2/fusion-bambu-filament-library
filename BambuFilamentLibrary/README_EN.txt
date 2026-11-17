@@ -60,23 +60,29 @@ are added automatically.
 
  1) In Fusion, press Shift+S.
  2) Select "BambuFilamentLibrary" and click Run.
- 3) A window shows:
-      - data source (online = latest data downloaded)
-      - colors not yet in Favorites
-      - colors already in Favorites
-      - outdated entries
- 4) Click "Yes". A new design opens, and only the missing items are
-    created and added to Favorites.
-      - The first run builds everything and takes 1-3 minutes.
+ 3) A selection window opens.
+      - Tabs at the top: [Filaments (colors)] / [Physical materials]
+      - Filaments are grouped by family (PLA, PETG ...). Click a product
+        line (PLA Basic, PLA Matte ...) to expand its colors.
+      - Every item has a toggle. Family and line toggles, and the
+        "Select all" toggle at the top, switch many at once.
+      - Search by name, color code or hex. While searching,
+        "Select all" applies only to the items found.
+      - "installed" = already in Favorites, "outdated" = values changed.
+      - At first, only the items you do not have yet are selected.
+ 4) Click "Install (n colors · m materials)". A new design opens, and
+    the selected items are created and added to Favorites.
+      - Installing everything takes 1-3 minutes.
       - Wait until the progress window closes.
  5) Optionally save the new design (e.g. "Bambu Filament Library")
     as a reference file. The items are already in Favorites either way.
- 6) When asked "Recolor them to the real filament colors?", click Yes,
-    then close Fusion. Within about 30 seconds the Favorites thumbnails
-    are recolored. Open Fusion again to see them. (see section 4-1)
+ 6) If "Recolor thumbnails to the real colors" is checked (bottom of
+    the window), close Fusion after installing. Within about
+    30 seconds the Favorites thumbnails are recolored. Open Fusion again
+    to see them. (see section 4-1)
 
  * To check for new filaments, just run it again.
-   Only newly released colors are added.
+   Newly released colors are preselected in the window.
  * Without internet, the data bundled in the folder is used.
 
 
@@ -140,6 +146,7 @@ are added automatically.
                             e.g. FAMILIES = ("PLA", "PETG")
    TEST_MODE = False        True builds only a few samples
    RECOLOR_THUMBNAILS = True  offer to recolor thumbnails
+   SHOW_SELECTOR = True     False = no window, install everything missing
 
 
 --------------------------------------------------------------
