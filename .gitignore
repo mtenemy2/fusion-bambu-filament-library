@@ -19,3 +19,4 @@ BambuFilamentLibrary/reset_state.json
 BambuFilamentLibrary/reset_log.txt
 BambuFilamentLibrary/restore_source*.adsklib
 data/announced_seen.json
+BambuFilamentLibrary/*.lock

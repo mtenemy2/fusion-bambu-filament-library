@@ -352,7 +352,29 @@ def make_payload(data, source, colors_state, mats_state):
                 version=version, updated=updated, author=AUTHOR, links=LINKS,
                 favorites=dict(bambu_appearances=len(fav["bambu_appearances"]), bambu_materials=len(fav["bambu_materials"]),
                                other_appearances=len(fav["appearances"]), other_materials=len(fav["materials"])),
-                reset_available=bool(helper_python()), reset_pending=os.path.exists(os.path.join(HERE, "reset_request.json")))
+                reset_available=bool(helper_python()), reset_pending=reset_pending())
+
+
+def reset_pending():
+    """A reset is pending only while its helper is still waiting for Fusion to close; a request left behind by a
+    helper that is gone (cancelled, crashed, PC restarted) is removed so it cannot show a false warning."""
+    req = os.path.join(HERE, "reset_request.json")
+    if not os.path.exists(req):
+        return False
+    try:
+        import helper_ui
+        importlib.reload(helper_ui)          # Fusion keeps modules loaded between runs
+        if helper_ui.is_running("reset"):
+            return True
+    except Exception as e:
+        log("reset_pending check failed:", e)
+        return True
+    try:
+        os.remove(req)
+        log("removed a stale reset request (its helper is no longer running)")
+    except OSError:
+        pass
+    return False
 
 
 def is_bambu(name):
@@ -477,8 +499,11 @@ def schedule_thumbnail_fix(app, ui, title, ask=True):
         q = ("%d Bambu appearances in Favorites still show the white preview thumbnail.\n\n"
              "Recolor them to the real filament colors?\n\n"
              "Fusion cannot change thumbnails while it is running, so the fix runs automatically right after you\n"
-             "CLOSE Fusion (about 30 seconds). Open Fusion again afterwards to see the colored thumbnails.\n"
-             "A backup of the Favorites library is kept.") % len(todo)
+             "CLOSE Fusion. A 'working' box appears, then a 'Done - you can open Fusion now' box\n"
+             "(usually within 20 seconds after Fusion has fully closed). Open Fusion after that.\n"
+             "A backup of the Favorites library is kept.\n\n"
+             "Fusion을 종료하면 '작업 중' 창이 뜨고, 이어서 '완료 - 이제 Fusion을 켜셔도 돼요' 창이 뜹니다\n"
+             "(Fusion이 완전히 꺼진 뒤 보통 20초 이내). 완료 창을 본 뒤 Fusion을 켜세요.") % len(todo)
         if ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
                          adsk.core.MessageBoxIconTypes.QuestionIconType) != adsk.core.DialogResults.DialogYes:
             return False
@@ -515,10 +540,12 @@ def schedule_reset(app, ui, title):
                    "bambu": len(fav["bambu_appearances"]) + len(fav["bambu_materials"])}, f, ensure_ascii=False, indent=1)
     launch_helper(py, "reset.py")
     ui.messageBox(
-        "Reset scheduled.\n\nCLOSE Fusion now: about 10 seconds after it closes, all %d Bambu items are removed "
+        "Reset scheduled.\n\nCLOSE Fusion now: after it has fully closed, all %d Bambu items are removed "
         "from Favorites (a backup of the Favorites library is kept).\n"
+        "Open Fusion again after the 'Reset done - you can open Fusion now' box appears (usually within 10 seconds).\n"
         "%s"
-        "\n\n리셋이 예약되었습니다. Fusion을 종료하면 약 10초 뒤 Bambu 항목 %d개가 즐겨찾기에서 제거됩니다 (백업 보관)."
+        "\n\n리셋이 예약되었습니다. Fusion을 종료하면 Bambu 항목 %d개가 즐겨찾기에서 제거됩니다 (백업 보관).\n"
+        "'리셋 완료 - 이제 Fusion을 켜셔도 돼요' 창이 뜬 뒤 Fusion을 다시 켜세요 (보통 10초 이내)."
         % (len(fav["bambu_appearances"]) + len(fav["bambu_materials"]),
            ("Your other %d favorites are added back the next time you run this script.\n"
             "다른 즐겨찾기 %d개는 이 스크립트를 다음에 실행할 때 다시 추가됩니다."
@@ -625,7 +652,8 @@ def finish_message(ui, title, made_a, made_m, fav_added, scheduled, stale_n):
         msg = msg.replace("(Favorites +%d)." % fav_added,
                           "(Favorites +%d, %d were already in Favorites)." % (fav_added, already))
     if scheduled:
-        msg += "\n\nThumbnails: CLOSE Fusion to recolor them (about 30 s), then open Fusion again."
+        msg += ("\n\nThumbnails: CLOSE Fusion to recolor them. Open Fusion again when the 'Done' box appears."
+                "\n썸네일: Fusion을 종료하면 색이 바뀝니다. '완료' 창이 뜬 뒤 Fusion을 다시 켜세요.")
     if stale_n:
         msg += "\n\n%d Favorites entries are outdated - remove them from Favorites and install again to refresh." % stale_n
     ui.messageBox(msg, title)

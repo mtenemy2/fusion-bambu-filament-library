@@ -12,6 +12,8 @@ CLI:  python thumbs.py [--wait-pid PID] [--library PATH] [--data bambu_filaments
 import glob, json, os, re, shutil, struct, sys, time, zipfile, zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:          # run with python -I, which leaves the script folder out of sys.path
+    sys.path.insert(0, HERE)
 GUID = rb"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"
 
 
@@ -196,19 +198,12 @@ def bambu_thumbnails(z, id_map=None):
     return found
 
 
-def fusion_running():
-    try:
-        if sys.platform == "win32":
-            import subprocess
-            out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq Fusion360.exe", "/NH"], capture_output=True, text=True).stdout
-            return "Fusion360.exe" in out
-        import subprocess
-        return subprocess.run(["pgrep", "-f", "Autodesk Fusion"], capture_output=True).returncode == 0
-    except Exception:
-        return False
+from helper_ui import fusion_running   # noqa: E402  (no console window)
 
 
-def patch_library(lib_path, records, log=print, id_map=None):
+def patch_library(lib_path, records, log=print, id_map=None, abort=None):
+    """Recolor the thumbnails. abort() is asked right before the library is replaced; if it returns True
+    (Fusion was opened again meanwhile) nothing is changed and None is returned."""
     by_code = {r["color_code"]: r for r in records}
     with zipfile.ZipFile(lib_path) as z:
         targets = {name: code for code, name in bambu_thumbnails(z, id_map).items() if code in by_code}
@@ -236,6 +231,10 @@ def patch_library(lib_path, records, log=print, id_map=None):
                 ni.compress_type, ni.external_attr, ni.create_system = info.compress_type, info.external_attr, info.create_system
                 ni.flag_bits = info.flag_bits & 0x0800
                 zo.writestr(ni, data)
+    if abort and abort():
+        os.remove(tmp)
+        log("Fusion was opened before the work finished - library left unchanged")
+        return None
     os.replace(tmp, lib_path)
     log("Recolored %d thumbnails in %s (backup: %s)" % (done, lib_path, backup))
     with open(os.path.join(HERE, "thumbnails_done.json"), "w", encoding="utf-8") as f:
@@ -254,25 +253,59 @@ def main(argv):
         elif argv[i] == "--wait-pid":
             wait_pid = int(argv[i + 1]); i += 1
         i += 1
+    import helper_ui as ui
     logf = open(os.path.join(HERE, "thumbnail_log.txt"), "a", encoding="utf-8")
     log = lambda s: (print(s), logf.write(time.strftime("%Y-%m-%d %H:%M:%S ") + s + "\n"), logf.flush())
+    if not ui.single_instance("thumbs"):
+        log("Another thumbnail helper is already waiting - this one exits.")
+        return 0
+    try:
+        return _run(lib, data, wait_pid, log, ui)
+    except Exception as e:
+        log("Error: %r" % e)
+        ui.info("썸네일 색상 변경 중 오류가 발생했어요. 즐겨찾기는 바뀌지 않았어요.\n"
+                "Recoloring the thumbnails failed. Favorites were not changed.\n\n%s" % e, warning=True)
+        return 1
+    finally:
+        ui.release("thumbs")
+
+
+WORKING = ("Fusion이 종료되어 Bambu 썸네일 색상을 바꾸는 중이에요.\n"
+           "'완료' 창이 뜰 때까지 Fusion을 켜지 마세요. (보통 20초 이내)\n\n"
+           "Fusion closed - recoloring the Bambu thumbnails.\n"
+           "Do not open Fusion until the 'done' message appears (usually under 20 seconds).")
+DONE = ("완료! 썸네일 %d개의 색상을 바꿨어요. 이제 Fusion을 켜셔도 돼요.\n\n"
+        "Done! %d thumbnails recolored. You can open Fusion now.")
+REOPENED = ("작업이 끝나기 전에 Fusion이 다시 켜져서 아무것도 바꾸지 않았어요.\n"
+            "Fusion을 다시 끄면 그때 이어서 처리하고 '완료' 창을 띄울게요.\n\n"
+            "Fusion was opened before the work finished, so nothing was changed.\n"
+            "Close Fusion again and it will finish then (a 'done' message will appear).")
+
+
+def _run(lib, data, wait_pid, log, ui):
     if wait_pid:
         log("Waiting for Fusion to close ...")
-        while fusion_running():
-            time.sleep(3)
-        time.sleep(5)          # let Fusion finish writing the library
-    if fusion_running():
-        log("Fusion is running - close it first.")
-        return 2
-    lib = lib or default_library()
-    if not lib or not os.path.exists(lib):
-        log("Favorites.adsklib not found")
-        return 1
-    records = json.load(open(data, encoding="utf-8"))
-    idp = os.path.join(HERE, "favorites_ids.json")
-    id_map = json.load(open(idp, encoding="utf-8")) if os.path.exists(idp) else None
-    patch_library(lib, records, log, id_map)
-    return 0
+    while True:
+        ui.wait_for_fusion_exit()      # also lets Fusion finish writing the library
+        lib = lib or default_library()
+        if not lib or not os.path.exists(lib):
+            log("Favorites.adsklib not found")
+            return 1
+        busy = ui.Status(WORKING)
+        try:
+            records = json.load(open(data, encoding="utf-8"))
+            idp = os.path.join(HERE, "favorites_ids.json")
+            id_map = json.load(open(idp, encoding="utf-8")) if os.path.exists(idp) else None
+            done = patch_library(lib, records, log, id_map, abort=ui.fusion_running)
+        finally:
+            busy.close()
+        if done is not None:
+            ui.info(DONE % (done, done))
+            return 0
+        busy = ui.Status(REOPENED)      # wait for the next close and try again
+        while ui.fusion_running():
+            time.sleep(2)
+        busy.close()
 
 
 if __name__ == "__main__":

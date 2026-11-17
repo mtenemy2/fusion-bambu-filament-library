@@ -56,6 +56,10 @@
   .item .meta { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .badge { display: inline-block; font-size: 10px; padding: 0 5px; border-radius: 8px; margin-left: 4px; vertical-align: 1px;
     font-weight: 600; background: var(--accent-weak); color: #087a34; }
+  .ichip { display: inline-block; font-size: 10.5px; padding: 0 6px; border-radius: 8px; margin-right: 6px; font-weight: 600;
+    background: var(--accent-weak); color: #087a34; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .instSum { font-size: 12px; margin-top: 3px; color: var(--muted); }
+  .instSum b { color: #087a34; font-variant-numeric: tabular-nums; }
   .badge.stale { background: var(--warn-weak); color: var(--warn); }
   .mat { display: flex; align-items: center; gap: 12px; padding: 9px 12px; background: var(--panel); border: 1px solid var(--line);
     border-radius: 8px; margin: 6px 0; cursor: pointer; }
@@ -140,6 +144,7 @@
     <div class="grow">
       <h1><span id="title">Bambu Lab Filament Library</span><span class="ver" id="ver"></span></h1>
       <div class="sub" id="source"></div>
+      <div class="instSum" id="instSum"></div>
     </div>
     <button class="link-btn" id="creditsBtn"></button>
   </div>
@@ -227,11 +232,13 @@ const KO = (navigator.language || "").toLowerCase().startsWith("ko");
 const T = KO ? {
   title: "Bambu Lab 필라멘트 라이브러리", fil: "필라멘트 (색상)", mat: "물리 재질", search: "검색: 이름, 색상 코드, HEX, 제품 라인…",
   all: "전체 선택", selInfo: (a, b) => `${a} / ${b} 선택`, expand: "모두 펼치기", collapse: "모두 접기",
-  installed: "설치됨", stale: "값 변경", recolor: "설치 후 썸네일을 실제 색으로 바꾸기", recolorNote: "Fusion을 종료하면 적용됩니다 (백업 보관)",
+  installed: "설치됨", stale: "값 변경", recolor: "설치 후 썸네일을 실제 색으로 바꾸기", recolorNote: "Fusion을 종료하면 적용됩니다. '완료' 창이 뜬 뒤 다시 켜세요 (백업 보관)",
   cancel: "취소", install: (a, b) => `설치 (색상 ${a} · 재질 ${b})`, none: "검색 결과가 없습니다", source: "데이터: ",
   matMeta: (r) => `밀도 ${r.density} g/cm³ · 영률 ${r.E} MPa · 인장 ${r.UTS} MPa${r.nozzle ? " · 노즐 " + r.nozzle + "°C" : ""}`,
   colors: (n) => `색상 ${n}개`, staleTip: "즐겨찾기에 있는 값이 최신 데이터와 다릅니다. 즐겨찾기에서 지운 뒤 설치하면 갱신됩니다.",
   installedTip: "이미 즐겨찾기에 있습니다", working: "설치하는 중…",
+  instSum: (a, A, m, M) => `설치됨: 필라멘트 <b>${a}</b> / ${A} · 물리 재질 <b>${m}</b> / ${M}`,
+  instChip: (n) => `✓ ${n}`, instChipTip: (n, t) => `${t}개 중 ${n}개 설치됨`, instTab: (n) => `설치 ${n}`,
   ver: (v, d) => `버전 ${v} · 최신 업데이트 ${d}`, credits: "ⓘ 만든 사람",
   agreeTitle: "사용 전 확인해 주세요",
   terms: [
@@ -249,7 +256,7 @@ const T = KO ? {
   resetSub: "이 프로그램으로 즐겨찾기에 추가한 Bambu 색상과 재질을 모두 지웁니다.",
   rcBambu: "제거할 Bambu 항목", rcOther: "유지할 다른 즐겨찾기",
   resetTerms: (o) => [
-    "Fusion은 실행 중에 즐겨찾기를 지울 수 없어서, <b>리셋을 예약한 뒤 Fusion을 종료하면</b> 약 10초 뒤에 제거됩니다. Fusion을 다시 켜면 비어 있습니다.",
+    "Fusion은 실행 중에 즐겨찾기를 지울 수 없어서, <b>리셋을 예약한 뒤 Fusion을 종료하면</b> 제거됩니다. '리셋 완료' 창이 뜬 뒤 Fusion을 다시 켜세요.",
     "제거 전에 즐겨찾기 라이브러리 전체를 <b>백업</b>합니다 (Favorites.adsklib.before-bambu-reset-날짜).",
     o ? `Bambu가 아닌 다른 즐겨찾기 ${o}개는 이 스크립트를 <b>다음에 실행할 때 자동으로 다시 추가</b>됩니다.` : "Bambu가 아닌 다른 즐겨찾기는 없습니다.",
     "이미 만들어 둔 디자인 파일에 적용된 외관·재질은 지워지지 않습니다.",
@@ -261,11 +268,13 @@ const T = KO ? {
 } : {
   title: "Bambu Lab Filament Library", fil: "Filaments (colors)", mat: "Physical materials", search: "Search: name, color code, hex, product line…",
   all: "Select all", selInfo: (a, b) => `${a} of ${b} selected`, expand: "Expand all", collapse: "Collapse all",
-  installed: "installed", stale: "outdated", recolor: "Recolor thumbnails to the real colors", recolorNote: "Applied when you close Fusion (backup kept)",
+  installed: "installed", stale: "outdated", recolor: "Recolor thumbnails to the real colors", recolorNote: "Applied when you close Fusion. Reopen it after the 'Done' box appears (backup kept)",
   cancel: "Cancel", install: (a, b) => `Install (${a} colors · ${b} materials)`, none: "No matches", source: "Data: ",
   matMeta: (r) => `density ${r.density} g/cm³ · E ${r.E} MPa · UTS ${r.UTS} MPa${r.nozzle ? " · nozzle " + r.nozzle + "°C" : ""}`,
   colors: (n) => `${n} colors`, staleTip: "The copy in Favorites differs from the latest data. Remove it from Favorites, then install to refresh.",
   installedTip: "Already in Favorites", working: "Installing…",
+  instSum: (a, A, m, M) => `Installed: filaments <b>${a}</b> / ${A} · physical materials <b>${m}</b> / ${M}`,
+  instChip: (n) => `✓ ${n}`, instChipTip: (n, t) => `${n} of ${t} installed`, instTab: (n) => `${n} installed`,
   ver: (v, d) => `Version ${v} · Last updated ${d}`, credits: "ⓘ Credits",
   agreeTitle: "Before you start",
   terms: [
@@ -283,7 +292,7 @@ const T = KO ? {
   resetSub: "Removes every Bambu color and material this program added to your Favorites.",
   rcBambu: "Bambu items to remove", rcOther: "Other favorites kept",
   resetTerms: (o) => [
-    "Fusion cannot remove favorites while it runs, so <b>schedule the reset and then close Fusion</b>. About 10 seconds later the items are removed; they are gone when you open Fusion again.",
+    "Fusion cannot remove favorites while it runs, so <b>schedule the reset and then close Fusion</b>. Open Fusion again after the 'Reset done' box appears.",
     "The whole Favorites library is <b>backed up</b> first (Favorites.adsklib.before-bambu-reset-&lt;date&gt;).",
     o ? `Your other ${o} favorites are <b>added back automatically</b> the next time you run this script.` : "You have no other favorites.",
     "Appearances and materials already used in your designs are not affected.",
@@ -381,6 +390,12 @@ function swState(list, set, key) {
 }
 
 // ---------- render ----------
+function instChip(list) {
+  const n = list.filter(x => x.installed).length;
+  return n ? `<span class="ichip" title="${esc(T.instChipTip(n, list.length))}">${T.instChip(n)}</span>` : "";
+}
+const nInst = (list) => list.filter(x => x.installed).length;
+
 function render() {
   const list = $("list");
   let html = "";
@@ -390,7 +405,7 @@ function render() {
     for (const fam of D.families) {
       const fc = vis.filter(c => c.family === fam);
       if (!fc.length) continue;
-      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span><span class="cnt">${fc.filter(c => selC.has(c.code)).length}/${fc.length}</span>` +
+      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span>${instChip(fc)}<span class="cnt">${fc.filter(c => selC.has(c.code)).length}/${fc.length}</span>` +
         `<button class="sw" role="switch" aria-checked="${swState(fc, selC, "code")}" data-fam="${esc(fam)}"></button></div>`;
       const lines = [...new Set(fc.map(c => c.line))];
       for (const line of lines) {
@@ -399,7 +414,7 @@ function render() {
         html += `<div class="line${open ? " open" : ""}" data-line="${esc(line)}"><div class="line-h">` +
           `<svg class="chev" viewBox="0 0 16 16"><path d="M5 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>` +
           `<span class="line-name">${hl(line)}</span><span class="strip">${lc.slice(0, 24).map(c => `<i style="background:${(c.alpha && c.alpha[0] === 0) ? "#eef3f6" : c.hex[0]}"></i>`).join("")}</span>` +
-          `<span class="cnt">${lc.filter(c => selC.has(c.code)).length}/${lc.length}</span>` +
+          instChip(lc) + `<span class="cnt">${lc.filter(c => selC.has(c.code)).length}/${lc.length}</span>` +
           `<button class="sw" role="switch" aria-checked="${swState(lc, selC, "code")}" data-lineSw="${esc(line)}"></button></div>`;
         if (open) {
           html += `<div class="items">`;
@@ -427,7 +442,7 @@ function render() {
     for (const fam of D.families) {
       const fm = vis.filter(m => m.family === fam);
       if (!fm.length) continue;
-      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span><span class="cnt">${fm.filter(m => selM.has(m.line)).length}/${fm.length}</span>` +
+      html += `<section class="fam"><div class="fam-h"><span class="grow">${esc(fam)}</span>${instChip(fm)}<span class="cnt">${fm.filter(m => selM.has(m.line)).length}/${fm.length}</span>` +
         `<button class="sw" role="switch" aria-checked="${swState(fm, selM, "line")}" data-mfam="${esc(fam)}"></button></div>`;
       for (const m of fm) {
         const badge = m.stale ? `<span class="badge stale" title="${esc(T.staleTip)}">${T.stale}</span>` :
@@ -444,8 +459,11 @@ function render() {
     $("expand").style.display = "none";
   }
   list.innerHTML = html;
-  $("tabFil").innerHTML = `${T.fil}<span class="n">${selC.size}/${D.colors.length}</span>`;
-  $("tabMat").innerHTML = `${T.mat}<span class="n">${selM.size}/${D.materials.length}</span>`;
+  $("tabFil").innerHTML = `${T.fil}<span class="n">${selC.size}/${D.colors.length}</span>` +
+    (nInst(D.colors) ? ` <span class="ichip">${T.instTab(nInst(D.colors))}</span>` : "");
+  $("tabMat").innerHTML = `${T.mat}<span class="n">${selM.size}/${D.materials.length}</span>` +
+    (nInst(D.materials) ? ` <span class="ichip">${T.instTab(nInst(D.materials))}</span>` : "");
+  $("instSum").innerHTML = T.instSum(nInst(D.colors), D.colors.length, nInst(D.materials), D.materials.length);
   $("install").textContent = T.install(selC.size, selM.size);
   $("install").disabled = selC.size + selM.size === 0;
   $("expand").textContent = openLines.size ? T.collapse : T.expand;

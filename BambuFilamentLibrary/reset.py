@@ -13,6 +13,9 @@ import glob, json, os, shutil, sys, time, zipfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATE = os.path.join(HERE, "reset_state.json")
 REQUEST = os.path.join(HERE, "reset_request.json")
+if HERE not in sys.path:          # run with python -I, which leaves the script folder out of sys.path
+    sys.path.insert(0, HERE)
+import helper_ui as ui            # noqa: E402
 
 
 def default_library():
@@ -29,16 +32,7 @@ def _ver_key(folder):
     return [int(x) for x in re.findall(r"\d+", folder)] if re.match(r"^\d+\.\d+", folder) else [0]
 
 
-def fusion_running():
-    import subprocess
-    try:
-        if sys.platform == "win32":
-            out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq Fusion360.exe", "/NH"],
-                                 capture_output=True, text=True).stdout
-            return "Fusion360.exe" in out
-        return subprocess.run(["pgrep", "-f", "Autodesk Fusion"], capture_output=True).returncode == 0
-    except Exception:
-        return False
+fusion_running = ui.fusion_running     # no console window
 
 
 def is_empty_library(path):
@@ -64,7 +58,43 @@ def empty_template(lib):
     return None
 
 
+DONE = ("리셋 완료! 즐겨찾기에서 Bambu 항목을 모두 지웠어요. 이제 Fusion을 켜셔도 돼요.\n"
+        "다른 즐겨찾기는 스크립트를 다음에 실행할 때 다시 추가돼요.\n\n"
+        "Reset done! All Bambu items were removed from Favorites. You can open Fusion now.\n"
+        "Your other favorites are added back the next time you run the script.")
+
+
+CANCELLED = ("리셋이 취소되었어요. 리셋이 끝나기 전에 Fusion이 다시 켜져서 아무것도 지우지 않았어요.\n"
+             "다시 하려면: 리셋 (모두 제거) → 리셋 예약 → Fusion 종료 → '리셋 완료' 창이 뜬 뒤 Fusion 켜기.\n\n"
+             "Reset cancelled: Fusion was opened again before the reset ran, so nothing was removed.\n"
+             "To reset: Reset (remove all) -> Schedule reset -> close Fusion -> open Fusion after the 'Reset done' box.")
+
+
 def main(argv):
+    if not ui.single_instance("reset"):
+        return 0
+    try:
+        rc = _main(argv)
+    except Exception as e:
+        rc = 1
+        try:
+            open(os.path.join(HERE, "reset_log.txt"), "a", encoding="utf-8").write(
+                time.strftime("%Y-%m-%d %H:%M:%S ") + "Error: %r\n" % e)
+        except OSError:
+            pass
+    finally:
+        ui.release("reset")
+    if rc == 0:
+        ui.info(DONE)
+    elif rc == 3:
+        ui.info(CANCELLED, warning=True)
+    else:
+        ui.info("리셋하지 못했어요. 즐겨찾기는 바뀌지 않았어요. (reset_log.txt 참고)\n\n"
+                "The reset did not run; Favorites were not changed. See reset_log.txt.", warning=True)
+    return rc
+
+
+def _main(argv):
     lib, wait_pid = None, None
     i = 0
     while i < len(argv):
@@ -77,12 +107,15 @@ def main(argv):
     log = lambda s: (print(s), logf.write(time.strftime("%Y-%m-%d %H:%M:%S ") + s + "\n"), logf.flush())
     if wait_pid:
         log("Reset scheduled. Waiting for Fusion to close ...")
-        while fusion_running():
-            time.sleep(3)
-        time.sleep(5)              # let Fusion finish writing the library
+        ui.wait_for_fusion_exit()  # also lets Fusion finish writing the library
     if fusion_running():
-        log("Fusion is running - close it first.")
-        return 2
+        # Fusion was opened again before the reset could run: cancel it rather than wipe items installed meanwhile
+        log("Fusion was opened again before the reset ran - reset cancelled, nothing changed.")
+        try:
+            os.remove(REQUEST)
+        except OSError:
+            pass
+        return 3
     req = {}
     if os.path.exists(REQUEST):
         req = json.load(open(REQUEST, encoding="utf-8"))

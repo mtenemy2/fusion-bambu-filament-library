@@ -83,16 +83,19 @@ are added automatically.
  5) Optionally save the new design (e.g. "Bambu Filament Library")
     as a reference file. The items are already in Favorites either way.
  6) If "Recolor thumbnails to the real colors" is checked (bottom of
-    the window), close Fusion after installing. Within about
-    30 seconds the Favorites thumbnails are recolored. Open Fusion again
-    to see them. (see section 4-1)
+    the window), close Fusion after installing. A "working" box
+    appears while the Favorites thumbnails are recolored; open Fusion
+    again when the "Done - you can open Fusion now" box appears
+    (usually within 20 seconds after Fusion has fully closed). If you
+    open Fusion earlier, it is done the next time you close Fusion. (see section 4-1)
 
  * To check for new filaments, just run it again.
    Newly released colors are preselected in the window.
  * Without internet, the data bundled in the folder is used.
  * Reset (uninstall): click "Reset (remove all)" at the bottom left of
    the window, tick the box, click "Schedule reset" and close Fusion.
-   About 10 seconds later every Bambu item is removed from Favorites
+   Every Bambu item is removed from Favorites and a "Reset done" box
+   appears; open Fusion after that
    (Fusion's API cannot remove favorites, so it runs after Fusion
    closes). The old library is kept as
    Favorites.adsklib.before-bambu-reset-<date>; your other favorites
