@@ -25,7 +25,7 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
 
 ## 실행하면
 1. 최신 Bambu 공식 색상표를 내려받습니다. 인터넷이 안 되면 폴더에 포함된 데이터를 씁니다.
-2. **선택 창**이 뜹니다. [필라멘트] / [물리 재질] 탭, 계열별로 펼쳐지는 제품 라인, 항목별·전체 선택 토글, 검색창, 색상 썸네일이 있습니다. 처음에는 아직 즐겨찾기에 없는 항목만 선택되어 있습니다.
+2. 먼저 **사용 전 확인** 창에서 면책 내용에 체크하고 **동의하고 계속**을 누릅니다. 이어서 **선택 창**이 뜹니다 (맨 위에 버전·최신 업데이트 날짜, 로고/**만든 사람**을 누르면 제작자 정보). [필라멘트] / [물리 재질] 탭, 계열별로 펼쳐지는 제품 라인, 항목별·전체 선택 토글, 검색창, 색상 썸네일이 있습니다. 처음에는 아직 즐겨찾기에 없는 항목만 선택되어 있습니다.
 3. **설치** 버튼을 누르면 새 디자인이 열리고 고른 항목이 만들어져 즐겨찾기에 추가됩니다. 이미 있는 항목은 건너뜁니다.
 4. 처음 실행하면 1~3분 정도 걸립니다. 다음부터는 새로 나온 색상만 추가하므로 빠릅니다.
 5. 선택 창의 "썸네일을 실제 색으로 바꾸기"를 켠 채 설치하고 Fusion을 종료하면, 흰색으로 보이던 즐겨찾기 썸네일이 실제 필라멘트 색으로 바뀝니다. Fusion API는 썸네일을 다시 그릴 수 없어서, Fusion이 꺼진 뒤 `Favorites.adsklib` 안의 썸네일 그림을 직접 칠합니다. 원본은 `Favorites.adsklib.before-bambu-thumbnails`로 백업됩니다.
@@ -67,7 +67,7 @@ Fusion API는 즐겨찾기 항목을 덮어쓰거나 지울 수 없습니다. �
 
 Adds every Bambu Lab filament to Autodesk Fusion: one **Appearance per color** (official hex) and one **Physical Material per product line** (density, modulus, strength, thermal values from Bambu technical data sheets), all added to **Favorites**. Each run downloads Bambu's latest official color table, so new filaments are picked up automatically; it falls back to the bundled data offline.
 
-**Install**: copy this `BambuFilamentLibrary` folder into Fusion's `API/Scripts` folder (Windows `%APPDATA%\Autodesk\Autodesk Fusion 360\API\Scripts\`, macOS `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/`), or add it with the **+** button in *Scripts and Add-Ins*. Then `Shift+S` → **BambuFilamentLibrary** → **Run**. A selection window lets you pick colors and materials (tabs, families with expandable product lines, per-item and select-all toggles, search, color thumbnails), then click **Install**.
+**Install**: copy this `BambuFilamentLibrary` folder into Fusion's `API/Scripts` folder (Windows `%APPDATA%\Autodesk\Autodesk Fusion 360\API\Scripts\`, macOS `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/`), or add it with the **+** button in *Scripts and Add-Ins*. Then `Shift+S` → **BambuFilamentLibrary** → **Run**. Accept the disclaimer (*Agree and continue*), then a selection window lets you pick colors and materials (tabs, families with expandable product lines, per-item and select-all toggles, search, color thumbnails), then click **Install**.
 
 Keep *Recolor thumbnails* checked to recolor the white Favorites thumbnails: the fix runs right after you close Fusion (the API cannot re-render thumbnails, so the images inside `Favorites.adsklib` are tinted; a backup is kept).
 

@@ -60,7 +60,13 @@ are added automatically.
 
  1) In Fusion, press Shift+S.
  2) Select "BambuFilamentLibrary" and click Run.
- 3) A selection window opens.
+ 3) A "Before you start" window opens first. Read the notice (the
+    author is not responsible for problems caused by running it),
+    tick the box and click "Agree and continue". Then the
+    selection window opens.
+      - The version and last update date are shown at the top.
+      - Click the logo or "Credits" for the author (UDTT Studio)
+        with GitHub and YouTube links.
       - Tabs at the top: [Filaments (colors)] / [Physical materials]
       - Filaments are grouped by family (PLA, PETG ...). Click a product
         line (PLA Basic, PLA Matte ...) to expand its colors.
@@ -174,3 +180,7 @@ are added automatically.
  - Unofficial tool, not affiliated with Bambu Lab or Autodesk.
  - Sources and licenses: see NOTICE.md.
  - Run logs: last_run_log.txt and last_report.txt in the script folder.
+ - Provided AS IS; the author is not responsible for any problem caused by running it.
+ - Made by UDTT Studio (우당탕탕 스튜디오)
+     YouTube: https://www.youtube.com/@udtt_studio
+     GitHub:  https://github.com/mtenemy2/fusion-bambu-filament-library

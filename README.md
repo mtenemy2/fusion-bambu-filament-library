@@ -22,7 +22,7 @@ Bambu Lab 필라멘트 전 제품의 **색상(외관)**과 **물성(물리 재�
    - Windows: `%APPDATA%\Autodesk\Autodesk Fusion 360\API\Scripts\`
    - macOS: `~/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts/`
    - or in Fusion: `Shift+S` → **+** → select the folder / 또는 Fusion에서 `Shift+S` → **+** → 폴더 선택
-3. In Fusion: `Shift+S` → **BambuFilamentLibrary** → **Run**
+3. In Fusion: `Shift+S` → **BambuFilamentLibrary** → **Run**, then tick the disclaimer and click **Agree and continue**. / 실행 후 면책 동의에 체크하고 **동의하고 계속**을 누릅니다.
 4. Pick what to install in the selection window, then click **Install**. / 선택 창에서 설치할 항목을 고르고 **설치**를 누릅니다.
    - Filaments / Physical materials tabs, families with expandable product lines / [필라멘트] / [물리 재질] 탭, 계열별로 펼쳐지는 제품 라인
    - Per-item, per-line and select-all toggles, search, color thumbnails / 항목·라인·전체 선택 토글, 검색창, 색상 썸네일
@@ -57,6 +57,18 @@ Gradient/multicolor products use their first color. Hex values are screen approx
 | `BambuFilamentLibrary/` | the Fusion script package (this folder is what the release zip contains) |
 | `BambuFilamentLibrary/bambu_data.py` | downloads the color table and builds the records (plain Python, no Fusion needed) |
 | `tools/update_library.py` | maintainer tool: refresh data, fetch new Bambu data sheets, rebuild the zip (`pip install -r tools/requirements.txt`) |
+
+## Credits / 만든 사람
+
+<img src="docs/udtt-logo.png" width="96" alt="UDTT Studio" align="left">
+
+Made by **UDTT Studio (우당탕탕 스튜디오)** · YouTube [@udtt_studio](https://www.youtube.com/@udtt_studio) · GitHub [mtenemy2](https://github.com/mtenemy2)
+
+<br clear="left">
+
+## Disclaimer / 면책
+
+Provided AS IS. The author is not responsible for any problem caused by running this program (damage to Fusion libraries, Favorites or design files, data loss, etc.). / 있는 그대로 제공되며, 실행으로 생기는 어떠한 문제에도 제작자는 책임을 지지 않습니다.
 
 ## License
 

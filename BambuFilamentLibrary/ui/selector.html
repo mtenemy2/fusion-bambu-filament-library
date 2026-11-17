@@ -84,12 +84,54 @@
   .empty { text-align: center; color: var(--muted); padding: 40px 10px; }
   .loading { text-align: center; color: var(--muted); padding: 60px 10px; }
   mark { background: #fff2a8; color: inherit; border-radius: 2px; }
+  /* header with logo + version */
+  .head { display: flex; align-items: center; gap: 10px; }
+  .head .grow { flex: 1; min-width: 0; }
+  .logo-btn { border: 0; padding: 0; background: none; cursor: pointer; flex: none; border-radius: 50%; }
+  .logo-btn img { width: 38px; height: 38px; display: block; border-radius: 50%; }
+  .logo-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .ver { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 1px 6px; border-radius: 8px;
+    background: var(--hover); color: var(--muted); margin-left: 6px; vertical-align: 2px; font-variant-numeric: tabular-nums; }
+  .link-btn { border: 1px solid var(--line); background: #fff; border-radius: 14px; padding: 4px 10px; font: inherit;
+    font-size: 12px; color: var(--text); cursor: pointer; white-space: nowrap; flex: none; }
+  .link-btn:hover { background: var(--hover); }
+  /* modal (agreement / credits) */
+  .modal { position: fixed; inset: 0; background: rgba(20, 24, 31, .55); display: none; align-items: center;
+    justify-content: center; padding: 16px; z-index: 10; }
+  .modal.show { display: flex; }
+  .card { background: var(--panel); border-radius: 12px; width: 100%; max-width: 460px; max-height: 100%; overflow-y: auto;
+    padding: 22px 22px 18px; box-shadow: 0 12px 40px rgba(0,0,0,.3); text-align: center; }
+  .card img.big { width: 112px; height: 112px; border-radius: 50%; display: block; margin: 0 auto 10px; }
+  .card h2 { font-size: 16px; margin: 0 0 2px; }
+  .card .sub { margin-bottom: 14px; }
+  .terms { text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+    font-size: 12px; color: var(--text); margin: 0 0 12px; }
+  .terms p { margin: 0 0 6px; }
+  .terms p:last-child { margin: 0; }
+  .agree { display: flex; gap: 8px; align-items: flex-start; text-align: left; font-weight: 600; font-size: 12.5px;
+    cursor: pointer; margin-bottom: 14px; }
+  .agree input { margin-top: 2px; width: 15px; height: 15px; flex: none; accent-color: var(--accent); }
+  .card .row { display: flex; gap: 8px; justify-content: flex-end; }
+  .credit-links { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 14px; text-align: left; }
+  .credit-links button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; font: inherit; cursor: pointer; text-align: left; }
+  .credit-links button:hover { background: var(--hover); }
+  .credit-links b { display: block; font-size: 12.5px; }
+  .credit-links span { color: var(--muted); font-size: 11px; word-break: break-all; }
+  .credit-links svg { flex: none; }
+  .fine { color: var(--muted); font-size: 11px; margin: 0 0 14px; }
 </style>
 </head>
 <body>
 <header>
-  <h1 id="title">Bambu Lab Filament Library</h1>
-  <div class="sub" id="source"></div>
+  <div class="head">
+    <button class="logo-btn" id="logoBtn"><img src="logo.png" alt="UDTT Studio"></button>
+    <div class="grow">
+      <h1><span id="title">Bambu Lab Filament Library</span><span class="ver" id="ver"></span></h1>
+      <div class="sub" id="source"></div>
+    </div>
+    <button class="link-btn" id="creditsBtn"></button>
+  </div>
   <div class="search">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
     <input id="q" type="text" autocomplete="off" spellcheck="false">
@@ -115,6 +157,40 @@
   <button class="btn primary" id="install"></button>
 </footer>
 
+<div class="modal show" id="agreeModal" role="dialog" aria-modal="true" aria-labelledby="agreeTitle">
+  <div class="card">
+    <img class="big" src="logo.png" alt="UDTT Studio">
+    <h2 id="agreeTitle"></h2>
+    <div class="sub" id="agreeVer"></div>
+    <div class="terms" id="terms"></div>
+    <label class="agree"><input type="checkbox" id="agreeChk"><span id="agreeLbl"></span></label>
+    <div class="row">
+      <button class="btn" id="agreeCancel"></button>
+      <button class="btn primary" id="agreeOk" disabled></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="creditsModal" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
+  <div class="card">
+    <img class="big" src="logo.png" alt="UDTT Studio">
+    <h2 id="creditsTitle"></h2>
+    <div class="sub" id="creditsBy"></div>
+    <div class="credit-links">
+      <button data-url="github" id="ghBtn">
+        <svg width="22" height="22" viewBox="0 0 16 16"><path fill="#1d2125" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        <div><b>GitHub</b><span id="ghUrl"></span></div>
+      </button>
+      <button data-url="youtube" id="ytBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24"><rect x="1" y="4.5" width="22" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.7v6.6l5.6-3.3z" fill="#fff"/></svg>
+        <div><b id="ytName"></b><span id="ytUrl"></span></div>
+      </button>
+    </div>
+    <p class="fine" id="creditsFine"></p>
+    <div class="row"><button class="btn primary" id="creditsClose"></button></div>
+  </div>
+</div>
+
 <script>
 "use strict";
 const KO = (navigator.language || "").toLowerCase().startsWith("ko");
@@ -125,7 +201,20 @@ const T = KO ? {
   cancel: "취소", install: (a, b) => `설치 (색상 ${a} · 재질 ${b})`, none: "검색 결과가 없습니다", source: "데이터: ",
   matMeta: (r) => `밀도 ${r.density} g/cm³ · 영률 ${r.E} MPa · 인장 ${r.UTS} MPa${r.nozzle ? " · 노즐 " + r.nozzle + "°C" : ""}`,
   colors: (n) => `색상 ${n}개`, staleTip: "즐겨찾기에 있는 값이 최신 데이터와 다릅니다. 즐겨찾기에서 지운 뒤 설치하면 갱신됩니다.",
-  installedTip: "이미 즐겨찾기에 있습니다", working: "설치하는 중…"
+  installedTip: "이미 즐겨찾기에 있습니다", working: "설치하는 중…",
+  ver: (v, d) => `버전 ${v} · 최신 업데이트 ${d}`, credits: "ⓘ 만든 사람",
+  agreeTitle: "사용 전 확인해 주세요",
+  terms: [
+    "이 프로그램은 Bambu Lab 및 Autodesk와 관계없는 <b>비공식 무료 프로그램</b>이며, 있는 그대로(AS IS) 제공됩니다.",
+    "실행 중 또는 실행 후에 Fusion 라이브러리·즐겨찾기·디자인 파일의 손상, 데이터 손실, 오작동 등 <b>어떠한 문제가 발생하더라도 제작자는 책임을 지지 않습니다.</b>",
+    "썸네일 색 바꾸기는 Fusion의 Favorites.adsklib 파일을 직접 수정합니다 (원본은 백업됩니다). 중요한 데이터는 미리 백업해 주세요.",
+    "필라멘트 색상과 물성 값은 참고용이며, 실제 제품과 다를 수 있습니다."
+  ],
+  agreeLbl: "위 내용을 읽고 이해했으며, 사용에 따른 모든 책임이 저에게 있음에 동의합니다.",
+  agreeOk: "동의하고 계속", close: "닫기",
+  creditsTitle: "Bambu Lab 필라멘트 라이브러리", creditsBy: "만든 사람: 우당탕탕 스튜디오 (UDTT Studio)",
+  ytName: "YouTube · 우당탕탕 스튜디오",
+  creditsFine: "MIT 라이선스 · 색상 데이터 © Bambu Lab (AGPL-3.0)\nBambu Lab 및 Autodesk와 관계없는 비공식 프로그램입니다."
 } : {
   title: "Bambu Lab Filament Library", fil: "Filaments (colors)", mat: "Physical materials", search: "Search: name, color code, hex, product line…",
   all: "Select all", selInfo: (a, b) => `${a} of ${b} selected`, expand: "Expand all", collapse: "Collapse all",
@@ -133,7 +222,20 @@ const T = KO ? {
   cancel: "Cancel", install: (a, b) => `Install (${a} colors · ${b} materials)`, none: "No matches", source: "Data: ",
   matMeta: (r) => `density ${r.density} g/cm³ · E ${r.E} MPa · UTS ${r.UTS} MPa${r.nozzle ? " · nozzle " + r.nozzle + "°C" : ""}`,
   colors: (n) => `${n} colors`, staleTip: "The copy in Favorites differs from the latest data. Remove it from Favorites, then install to refresh.",
-  installedTip: "Already in Favorites", working: "Installing…"
+  installedTip: "Already in Favorites", working: "Installing…",
+  ver: (v, d) => `Version ${v} · Last updated ${d}`, credits: "ⓘ Credits",
+  agreeTitle: "Before you start",
+  terms: [
+    "This is an <b>unofficial, free program</b>, not affiliated with Bambu Lab or Autodesk, provided AS IS without warranty.",
+    "<b>The author is not responsible for any problem</b> that occurs while or after running it, including damage to Fusion libraries, Favorites or design files, data loss or malfunction.",
+    "Recoloring thumbnails edits Fusion's Favorites.adsklib file directly (a backup is kept). Back up important data first.",
+    "Filament colors and property values are for reference only and may differ from the real products."
+  ],
+  agreeLbl: "I have read and understood the above, and I accept full responsibility for using this program.",
+  agreeOk: "Agree and continue", close: "Close",
+  creditsTitle: "Bambu Lab Filament Library", creditsBy: "Made by UDTT Studio (우당탕탕 스튜디오)",
+  ytName: "YouTube · UDTT Studio (우당탕탕 스튜디오)",
+  creditsFine: "MIT License · Color data © Bambu Lab (AGPL-3.0)\nUnofficial; not affiliated with Bambu Lab or Autodesk."
 };
 
 let D = null;                 // payload from Fusion
@@ -351,16 +453,62 @@ function send(action, data) {
 }
 $("cancel").addEventListener("click", () => send("cancel"));
 $("install").addEventListener("click", () => {
+  if (!agreed) return showModal("agreeModal", true);
   $("install").disabled = true;
   $("install").textContent = T.working;
   send("install", { colors: [...selC], materials: [...selM], recolor: $("recolor").checked });
 });
 
+// ---------- agreement / credits ----------
+let agreed = false;
+function showModal(id, on) { $(id).classList.toggle("show", on); }
+$("agreeChk").addEventListener("change", () => { $("agreeOk").disabled = !$("agreeChk").checked; });
+$("agreeOk").addEventListener("click", () => {
+  if (!$("agreeChk").checked) return;
+  agreed = true;
+  showModal("agreeModal", false);
+  send("agree", {});
+  $("q").focus();
+});
+$("agreeCancel").addEventListener("click", () => send("cancel"));
+const openCredits = () => showModal("creditsModal", true);
+$("creditsBtn").addEventListener("click", openCredits);
+$("logoBtn").addEventListener("click", openCredits);
+$("creditsClose").addEventListener("click", () => showModal("creditsModal", false));
+$("creditsModal").addEventListener("click", (e) => { if (e.target.id === "creditsModal") showModal("creditsModal", false); });
+document.querySelectorAll(".credit-links button").forEach(b => b.addEventListener("click", () => {
+  const url = LINKS[b.dataset.url];
+  if (!url) return;
+  if (window.adsk && adsk.fusionSendData) send("open", { which: b.dataset.url });
+  else window.open(url, "_blank");
+}));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("creditsModal").classList.contains("show")) showModal("creditsModal", false);
+});
+let LINKS = {
+  github: "https://github.com/mtenemy2/fusion-bambu-filament-library",
+  youtube: "https://www.youtube.com/@udtt_studio"
+};
+function showLinks() {
+  $("ghUrl").textContent = LINKS.github.replace(/^https?:\/\//, "");
+  $("ytUrl").textContent = LINKS.youtube.replace(/^https?:\/\//, "");
+  $("ytBtn").style.display = LINKS.youtube ? "" : "none";
+}
+function showVersion(v, d) {
+  if (!v) return;
+  $("ver").textContent = "v" + v;
+  $("agreeVer").textContent = T.ver(v, d);
+  $("ver").title = T.ver(v, d);
+}
+
 // ---------- init ----------
 function init(payload) {
   D = typeof payload === "string" ? JSON.parse(payload) : payload;
   $("loading") && $("loading").remove();
-  $("source").textContent = T.source + D.source + " · " + D.colors.length + " / " + D.materials.length;
+  if (D.links) { LINKS = Object.assign(LINKS, D.links); showLinks(); }
+  showVersion(D.version, D.updated);
+  $("source").textContent = (D.version ? T.ver(D.version, D.updated) + " · " : "") +
+    T.source + D.source + " · " + D.colors.length + " / " + D.materials.length;
   D.colors.forEach(c => { if (!c.installed) selC.add(c.code); });
   D.materials.forEach(m => { if (!m.installed) selM.add(m.line); });
   if (!D.recolor_available) { $("recolor").checked = false; $("recolor").disabled = true; }
@@ -373,6 +521,19 @@ $("allLbl").textContent = T.all;
 $("recolorLbl").textContent = T.recolor;
 $("footNote").textContent = T.recolorNote;
 $("cancel").textContent = T.cancel;
+$("creditsBtn").textContent = T.credits;
+$("logoBtn").title = T.credits;
+$("agreeTitle").textContent = T.agreeTitle;
+$("terms").innerHTML = T.terms.map(p => `<p>• ${p}</p>`).join("");
+$("agreeLbl").textContent = T.agreeLbl;
+$("agreeOk").textContent = T.agreeOk;
+$("agreeCancel").textContent = T.cancel;
+$("creditsTitle").textContent = T.creditsTitle;
+$("creditsBy").textContent = T.creditsBy;
+$("ytName").textContent = T.ytName;
+$("creditsFine").innerText = T.creditsFine;
+$("creditsClose").textContent = T.close;
+showLinks();
 window.fusionJavaScriptHandler = { handle: (action, data) => { if (action === "data") init(data); return "OK"; } };
 
 if (window.BAMBU_DEMO) {

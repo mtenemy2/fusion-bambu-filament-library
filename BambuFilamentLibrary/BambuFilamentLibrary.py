@@ -21,6 +21,19 @@ TEST_MODE = False                # True: build only a small sample, for checking
 RECOLOR_THUMBNAILS = True        # offer to recolor the white Favorites thumbnails (runs after Fusion closes)
 SHOW_SELECTOR = True             # show the selection window (False: add everything missing, no window)
 
+AUTHOR = "UDTT Studio (우당탕탕 스튜디오)"
+LINKS = {
+    "github": "https://github.com/mtenemy2/fusion-bambu-filament-library",
+    "youtube": "https://www.youtube.com/@udtt_studio",   # empty = hidden
+}
+DISCLAIMER = (
+    "This is an unofficial, free program (not affiliated with Bambu Lab or Autodesk), provided AS IS.\n"
+    "The author is not responsible for any problem caused by running it, including damage to Fusion libraries, "
+    "Favorites or design files, or data loss. Back up important data first.\n\n"
+    "이 프로그램은 Bambu Lab·Autodesk와 관계없는 비공식 무료 프로그램이며 있는 그대로 제공됩니다. "
+    "실행으로 인해 발생하는 어떠한 문제(라이브러리·즐겨찾기·디자인 파일 손상, 데이터 손실 등)에도 제작자는 책임을 지지 않습니다.\n\n"
+    "Do you agree and want to continue? / 동의하고 계속하시겠습니까?")
+
 LOG = []
 
 
@@ -332,8 +345,21 @@ def make_payload(data, source, colors_state, mats_state):
         mats.append(dict(line=line, family=r["family"], density=round(r["density"], 3), E=round(r["youngs_mpa"]),
                          UTS=r["tensile_mpa"], nozzle=r["nozzle_c"], source=r["mech_source"], ncolors=len(rs),
                          installed=inst, stale=st))
+    version, updated = version_info()
     return dict(source=source, families=fams, colors=cols, materials=mats,
-                recolor_available=bool(RECOLOR_THUMBNAILS and helper_python()))
+                recolor_available=bool(RECOLOR_THUMBNAILS and helper_python()),
+                version=version, updated=updated, author=AUTHOR, links=LINKS)
+
+
+def version_info():
+    """(version, last update date) from the manifest; the version is the release date, e.g. 2026.11.17.1."""
+    try:
+        with open(os.path.join(HERE, "BambuFilamentLibrary.manifest"), encoding="utf-8") as f:
+            v = json.load(f).get("version", "")
+    except Exception:
+        return "", ""
+    m = re.match(r"^(\d{4})\.(\d{1,2})\.(\d{1,2})", v)
+    return v, ("%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3))) if m else "")
 
 
 def build(app, ui, title, data, codes, lines):
@@ -498,6 +524,15 @@ class _HTMLHandler(adsk.core.HTMLEventHandler):
         try:
             if a.action == "ready":
                 a.returnData = STATE["payload"]
+            elif a.action == "agree":
+                log("Disclaimer accepted")
+                a.returnData = "OK"
+            elif a.action == "open":
+                url = LINKS.get(json.loads(a.data or "{}").get("which", ""), "")
+                if url.startswith("https://"):      # only the fixed credit links, never a URL sent by the page
+                    import webbrowser
+                    webbrowser.open(url)
+                a.returnData = "OK"
             elif a.action in ("install", "cancel"):
                 STATE["selection"] = json.loads(a.data or "{}")
                 a.returnData = "OK"
@@ -603,6 +638,13 @@ def run(context):
         colors_state, mats_state = read_state(app, data)
         codes = {c for c, (inst, _) in colors_state.items() if not inst}
         lines = {r["line"] for r in data if not mats_state[material_name(r)][0]}
+        version, updated = version_info()
+        if ui.messageBox(DISCLAIMER, "%s  v%s (%s)" % (title, version, updated),
+                         adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                         adsk.core.MessageBoxIconTypes.WarningIconType) != adsk.core.DialogResults.DialogYes:
+            log("Disclaimer declined")
+            write_log()
+            return
         q = "Data: %s\n%d colors / %d materials not yet in Favorites.\n\nAdd them now?" % (source, len(codes), len(lines))
         if (codes or lines) and ui.messageBox(q, title, adsk.core.MessageBoxButtonTypes.YesNoButtonType,
                                                adsk.core.MessageBoxIconTypes.QuestionIconType) == adsk.core.DialogResults.DialogYes:

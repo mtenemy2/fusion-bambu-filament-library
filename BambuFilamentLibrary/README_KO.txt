@@ -57,7 +57,13 @@ Bambu Lab 필라멘트 전 제품의 색상과 물성을 Fusion에 넣어 주는
 
  1) Fusion에서 Shift+S 를 누릅니다.
  2) 목록에서 "BambuFilamentLibrary"를 선택하고 실행(Run)을 누릅니다.
- 3) 설치할 항목을 고르는 선택 창이 뜹니다.
+ 3) 먼저 "사용 전 확인" 창이 뜹니다. 실행으로 생기는 문제에 대해
+    제작자가 책임지지 않는다는 내용을 읽고 체크한 뒤
+    "동의하고 계속"을 누르세요. (체크하지 않으면 진행되지 않습니다)
+    이어서 설치할 항목을 고르는 선택 창이 나옵니다.
+      - 맨 위에 프로그램 버전과 최신 업데이트 날짜가 표시됩니다.
+      - 왼쪽 위 로고나 "ⓘ 만든 사람"을 누르면 제작자(우당탕탕
+        스튜디오)의 GitHub·YouTube 주소가 있는 창이 열립니다.
       - 위쪽 탭: [필라멘트(색상)] / [물리 재질]
       - 필라멘트는 계열(PLA, PETG ...)별로 묶여 있고, 제품 라인
         (PLA Basic, PLA Matte ...)을 누르면 색상 목록이 펼쳐집니다.
@@ -172,3 +178,7 @@ Bambu Lab 필라멘트 전 제품의 색상과 물성을 Fusion에 넣어 주는
  - 비공식 도구이며 Bambu Lab, Autodesk와 관련이 없습니다.
  - 출처와 라이선스는 NOTICE.md 파일을 참고하세요.
  - 실행 기록: 스크립트 폴더의 last_run_log.txt, last_report.txt
+ - 실행으로 생기는 어떠한 문제에도 제작자는 책임을 지지 않습니다.
+ - 만든 사람: 우당탕탕 스튜디오 (UDTT Studio)
+     YouTube: https://www.youtube.com/@udtt_studio
+     GitHub:  https://github.com/mtenemy2/fusion-bambu-filament-library
