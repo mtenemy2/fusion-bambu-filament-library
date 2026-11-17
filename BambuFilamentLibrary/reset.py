@@ -70,9 +70,15 @@ CANCELLED = ("리셋이 취소되었어요. 리셋이 끝나기 전에 Fusion이
              "To reset: Reset (remove all) -> Schedule reset -> close Fusion -> open Fusion after the 'Reset done' box.")
 
 
+WIN = None
+
+
 def main(argv):
+    global WIN
     if not ui.single_instance("reset"):
         return 0
+    WIN = ui.Progress("'리셋 완료' 창이 뜰 때까지 Fusion을 켜지 마세요.",
+                      "Do not open Fusion until the 'Reset done' message appears.")
     try:
         rc = _main(argv)
     except Exception as e:
@@ -85,12 +91,12 @@ def main(argv):
     finally:
         ui.release("reset")
     if rc == 0:
-        ui.info(DONE)
+        WIN.finish(*DONE.split("\n\n"))
     elif rc == 3:
-        ui.info(CANCELLED, warning=True)
+        WIN.finish(*CANCELLED.split("\n\n"), warning=True)
     else:
-        ui.info("리셋하지 못했어요. 즐겨찾기는 바뀌지 않았어요. (reset_log.txt 참고)\n\n"
-                "The reset did not run; Favorites were not changed. See reset_log.txt.", warning=True)
+        WIN.finish("리셋하지 못했어요. 즐겨찾기는 바뀌지 않았어요. (reset_log.txt 참고)",
+                   "The reset did not run; Favorites were not changed. See reset_log.txt.", warning=True)
     return rc
 
 
@@ -107,7 +113,7 @@ def _main(argv):
     log = lambda s: (print(s), logf.write(time.strftime("%Y-%m-%d %H:%M:%S ") + s + "\n"), logf.flush())
     if wait_pid:
         log("Reset scheduled. Waiting for Fusion to close ...")
-        ui.wait_for_fusion_exit()  # also lets Fusion finish writing the library
+        ui.wait_for_fusion_exit(progress=WIN)  # also lets Fusion finish writing the library
     if fusion_running():
         # Fusion was opened again before the reset could run: cancel it rather than wipe items installed meanwhile
         log("Fusion was opened again before the reset ran - reset cancelled, nothing changed.")
@@ -123,6 +129,9 @@ def _main(argv):
     if not lib or not os.path.exists(lib):
         log("Favorites.adsklib not found")
         return 1
+    if WIN:
+        WIN.set("즐겨찾기에서 Bambu 항목을 지우는 중…", "Removing the Bambu items from Favorites…")
+        WIN.show()
     tpl = empty_template(lib)
     if not tpl:
         log("No empty Favorites library template found - nothing changed.")

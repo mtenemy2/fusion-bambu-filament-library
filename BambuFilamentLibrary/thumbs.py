@@ -201,7 +201,7 @@ def bambu_thumbnails(z, id_map=None):
 from helper_ui import fusion_running   # noqa: E402  (no console window)
 
 
-def patch_library(lib_path, records, log=print, id_map=None, abort=None):
+def patch_library(lib_path, records, log=print, id_map=None, abort=None, progress=None):
     """Recolor the thumbnails. abort() is asked right before the library is replaced; if it returns True
     (Fusion was opened again meanwhile) nothing is changed and None is returned."""
     by_code = {r["color_code"]: r for r in records}
@@ -215,6 +215,8 @@ def patch_library(lib_path, records, log=print, id_map=None, abort=None):
             shutil.copy2(lib_path, backup)
         tmp = lib_path + ".tmp"
         done = 0
+        if progress:
+            progress(0, len(targets))
         with zipfile.ZipFile(tmp, "w") as zo:
             for info in z.infolist():
                 data = z.read(info.filename)
@@ -225,6 +227,8 @@ def patch_library(lib_path, records, log=print, id_map=None, abort=None):
                         w, h, rgb = read_png(data)
                         data = write_png(w, h, recolor(w, h, rgb, r["hex"][0] if r["alpha"][0] else "#F4F7F8", r["style"]))
                         done += 1
+                        if progress:
+                            progress(done, len(targets))
                     except Exception as e:
                         log("  skip %s: %s" % (code, e))
                 ni = zipfile.ZipInfo(info.filename, info.date_time)
@@ -270,42 +274,40 @@ def main(argv):
         ui.release("thumbs")
 
 
-WORKING = ("Fusion이 종료되어 Bambu 썸네일 색상을 바꾸는 중이에요.\n"
-           "'완료' 창이 뜰 때까지 Fusion을 켜지 마세요. (보통 20초 이내)\n\n"
-           "Fusion closed - recoloring the Bambu thumbnails.\n"
-           "Do not open Fusion until the 'done' message appears (usually under 20 seconds).")
-DONE = ("완료! 썸네일 %d개의 색상을 바꿨어요. 이제 Fusion을 켜셔도 돼요.\n\n"
-        "Done! %d thumbnails recolored. You can open Fusion now.")
+HINT = ("'완료' 창이 뜰 때까지 Fusion을 켜지 마세요.", "Do not open Fusion until the 'done' message appears.")
 REOPENED = ("작업이 끝나기 전에 Fusion이 다시 켜져서 아무것도 바꾸지 않았어요.\n"
-            "Fusion을 다시 끄면 그때 이어서 처리하고 '완료' 창을 띄울게요.\n\n"
+            "Fusion을 다시 끄면 그때 이어서 처리할게요.",
             "Fusion was opened before the work finished, so nothing was changed.\n"
-            "Close Fusion again and it will finish then (a 'done' message will appear).")
+            "Close Fusion again and it will finish then.")
 
 
 def _run(lib, data, wait_pid, log, ui):
     if wait_pid:
         log("Waiting for Fusion to close ...")
     while True:
-        ui.wait_for_fusion_exit()      # also lets Fusion finish writing the library
+        win = ui.Progress(*HINT)
+        ui.wait_for_fusion_exit(progress=win)      # also lets Fusion finish writing the library
         lib = lib or default_library()
         if not lib or not os.path.exists(lib):
             log("Favorites.adsklib not found")
+            win.finish("즐겨찾기 라이브러리를 찾지 못했어요.", "Favorites library not found.", warning=True)
             return 1
-        busy = ui.Status(WORKING)
+        win.set("Bambu 썸네일 색상을 준비하는 중…", "Preparing the Bambu thumbnails…")
+        win.show()
+        step = lambda d, t: win.set("Bambu 썸네일 색상을 바꾸는 중…", "Recoloring the Bambu thumbnails…", d, t)
         try:
             records = json.load(open(data, encoding="utf-8"))
             idp = os.path.join(HERE, "favorites_ids.json")
             id_map = json.load(open(idp, encoding="utf-8")) if os.path.exists(idp) else None
-            done = patch_library(lib, records, log, id_map, abort=ui.fusion_running)
-        finally:
-            busy.close()
+            done = patch_library(lib, records, log, id_map, abort=ui.fusion_running, progress=step)
+        except Exception:
+            win.close()
+            raise
         if done is not None:
-            ui.info(DONE % (done, done))
+            win.finish("완료! 썸네일 %d개의 색상을 바꿨어요. 이제 Fusion을 켜셔도 돼요." % done,
+                       "Done! %d thumbnails recolored. You can open Fusion now." % done)
             return 0
-        busy = ui.Status(REOPENED)      # wait for the next close and try again
-        while ui.fusion_running():
-            time.sleep(2)
-        busy.close()
+        win.finish(*REOPENED, warning=True)        # wait for the next close and try again
 
 
 if __name__ == "__main__":
