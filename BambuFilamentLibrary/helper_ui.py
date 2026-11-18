@@ -84,20 +84,167 @@ def wait_for_fusion_exit(poll=2, settle=5, progress=None):
     time.sleep(settle)
 
 
+def _ui_korean():
+    try:
+        if sys.platform == "win32":
+            import ctypes
+            return (ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF) == 0x12
+        import locale
+        return (locale.getlocale()[0] or "").lower().startswith("ko")
+    except Exception:
+        return True
+
+
+def _dpi_aware():
+    """Draw at the real screen resolution (otherwise Windows stretches the window and everything looks blurry)."""
+    if sys.platform != "win32":
+        return
+    import ctypes
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)        # per-monitor
+    except Exception:
+        try:
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
+
+
+def _mix(a, b, t):
+    return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t)
+
+
+def _hex(c):
+    return "#%02x%02x%02x" % (int(c[0] + .5), int(c[1] + .5), int(c[2] + .5))
+
+
+class _PillBar:
+    """Antialiased pill-shaped progress bar drawn into a PhotoImage (tk canvases have no antialiasing).
+    indeterminate: a soft gleam sweeps left to right; determinate: the fill eases toward the target value."""
+    BG = (255, 255, 255)
+    TRACK = (234, 238, 242)
+    FILL_A = (0, 158, 60)          # Bambu green, slightly deeper on the left
+    FILL_B = (38, 196, 99)
+    GLEAM = (0, 174, 66)
+    PERIOD = 1.7                   # seconds per sweep
+
+    def __init__(self, tk, parent, w, h):
+        import math
+        self.math = math
+        self.w, self.h = w, h
+        self.img = tk.PhotoImage(width=w, height=h)
+        self.label = tk.Label(parent, image=self.img, bg=_hex(self.BG), bd=0, highlightthickness=0)
+        self.r = h / 2.0
+        self.cy = h / 2.0
+        self.mode = "indeterminate"
+        self.gleam = 1.0           # shimmer opacity (fades out in determinate mode)
+        self.shown = 0.0           # displayed fraction (eases toward target)
+        self.target = 0.0
+        self.t0 = time.time()
+        self.last = self.t0
+        self.dirty = True
+        # vertical coverage of each row in the straight middle part of a pill
+        self.vcov = [max(0.0, min(1.0, self.r - abs(y + .5 - self.cy) + .5)) for y in range(h)]
+
+    def set_mode(self, mode):
+        if mode != self.mode:
+            self.mode = mode
+            if mode == "determinate":
+                self.shown = self.target = 0.0
+            else:
+                self.gleam = 1.0
+            self.dirty = True
+
+    def set_value(self, frac):
+        self.target = max(0.0, min(1.0, frac))
+        self.dirty = True
+
+    def _cov(self, x, y, x1):
+        """Coverage of pixel (x, y) by a pill spanning [0, x1]."""
+        r = self.r
+        px, py = x + .5, y + .5
+        cx = min(max(px, r), max(r, x1 - r))
+        d = self.math.hypot(px - cx, py - self.cy)
+        return max(0.0, min(1.0, r - d + .5))
+
+    def step(self):
+        now = time.time()
+        dt, self.last = now - self.last, now
+        if self.mode == "determinate":
+            k = 1.0 - self.math.exp(-dt / 0.22)          # ease-out toward the target
+            self.shown += (self.target - self.shown) * k
+            if abs(self.target - self.shown) < 0.0005:
+                self.shown = self.target
+            if self.gleam > 0:
+                self.gleam = max(0.0, self.gleam - dt / 0.45)
+            if not self.dirty and self.gleam == 0 and self.shown == self.target:
+                return
+        self.dirty = False
+        self._render(now)
+
+    def _render(self, now):
+        w, h, r = self.w, self.h, self.r
+        fw = self.shown * w if self.mode == "determinate" else 0.0
+        fade = min(1.0, fw / h) if fw > 0 else 0.0           # very short fills fade in instead of popping
+        fx1 = max(fw, h) if fw > 0 else 0.0
+        # gleam: gaussian band moving left -> right with ease-in-out
+        g = []
+        if self.gleam > 0:
+            p = ((now - self.t0) % self.PERIOD) / self.PERIOD
+            p = p * p * (3 - 2 * p)
+            sigma = w * 0.16
+            c = -0.35 * w + p * 1.7 * w
+            peak = 0.55 * self.gleam
+            g = [peak * self.math.exp(-((x + .5 - c) / sigma) ** 2) for x in range(w)]
+        # full-coverage color of each column
+        cols = []
+        for x in range(w):
+            col = self.TRACK
+            if g:
+                col = _mix(col, self.GLEAM, g[x])
+            if fw > 0 and x < fx1:
+                col = _mix(col, _mix(self.FILL_A, self.FILL_B, x / max(1.0, fx1)), fade)
+            cols.append(col)
+        hexcols = [_hex(c) for c in cols]
+        edge = int(r) + 2
+        rows = []
+        for y in range(h):
+            vc = self.vcov[y]
+            row = []
+            for x in range(w):
+                near_end = x < edge or x >= w - edge
+                near_fill = fw > 0 and abs(x - fx1) < edge
+                if not near_end and not near_fill:
+                    row.append(hexcols[x] if vc >= 1.0 else _hex(_mix(self.BG, cols[x], vc)))
+                    continue
+                ct = self._cov(x, y, w)
+                base = self.TRACK
+                if g:
+                    base = _mix(base, self.GLEAM, g[x])
+                if fw > 0:
+                    cf = min(ct, self._cov(x, y, fx1)) * fade
+                    if cf > 0:
+                        base = _mix(base, _mix(self.FILL_A, self.FILL_B, min(1.0, x / max(1.0, fx1))), cf / max(ct, 1e-6))
+                row.append(_hex(_mix(self.BG, base, ct)))
+            rows.append("{" + " ".join(row) + "}")
+        self.img.put(" ".join(rows), to=(0, 0))
+
+
 class Progress:
-    """An animated progress window (tkinter, own thread) shown while a helper works.
+    """A progress window (tkinter, own thread) shown while a helper works after Fusion closes.
     set() changes the text and, with done/total, shows real progress; finish() turns it into the
     'done' message with an OK button. Falls back to plain message boxes when tkinter is not available."""
 
     def __init__(self, hint_ko, hint_en):
         import queue
         self.q = queue.Queue()
-        self.ok = threading.Event()
         self.closed = threading.Event()
         self.ready = threading.Event()
         self.failed = False
-        self.hint = "%s\n%s" % (hint_ko, hint_en)
+        self.ko = _ui_korean()
+        self.hint_pair = (hint_ko, hint_en)
+        self.hint = hint_ko if self.ko else hint_en
         self.status_box = None
+        self.finished = False
         threading.Thread(target=self._run, daemon=True).start()
         self.ready.wait(10)
 
@@ -105,7 +252,7 @@ class Progress:
     def set(self, ko, en, done=None, total=None):
         self.q.put(("set", ko, en, done, total))
         if self.failed and self.status_box is None:
-            self.status_box = Status("%s\n%s\n\n%s" % (ko, en, self.hint))
+            self.status_box = Status("%s\n%s\n\n%s\n%s" % (ko, en, self.hint_pair[0], self.hint_pair[1]))
 
     def show(self):
         self.q.put(("show",))
@@ -132,15 +279,15 @@ class Progress:
     # ---- tk thread
     def _run(self):
         try:
+            _dpi_aware()
             import tkinter as tk
-            from tkinter import ttk
             root = tk.Tk()
         except Exception:
             self.failed = True
             self.ready.set()
             return
         try:
-            self._build(root, tk, ttk)
+            self._build(root, tk)
         except Exception:
             self.failed = True
             self.ready.set()
@@ -153,60 +300,138 @@ class Progress:
         root.mainloop()
         self.closed.set()
 
-    def _build(self, root, tk, ttk):
+    def _logo(self, tk, px):
+        """Closest pre-rendered logo size (ui/logo_<px>.png, downscaled with a high-quality filter)."""
+        sizes = [52, 65, 78, 91, 104, 130]
+        best = min(sizes, key=lambda s: (s < px, abs(s - px)))
+        for name in ("logo_%d.png" % best, "logo.png"):
+            p = os.path.join(HERE, "ui", name)
+            if os.path.exists(p):
+                img = tk.PhotoImage(file=p)
+                if name == "logo.png":
+                    img = img.subsample(max(1, img.width() // max(1, px)))
+                return img
+        return None
+
+    def _build(self, root, tk):
+        S = root.winfo_fpixels("1i") / 96.0
+        self.S = S
+        P = lambda v: int(round(v * S))
+        WHITE, INK, MUTED, SOFT = "#ffffff", "#1f2328", "#6b7280", "#9aa3ad"
         root.withdraw()
         root.title(TITLE)
         root.resizable(False, False)
         root.attributes("-topmost", True)
-        root.configure(bg="#ffffff")
+        root.configure(bg=WHITE)
         root.protocol("WM_DELETE_WINDOW", lambda: None)          # closes with OK only
-        font = ("Malgun Gothic", 10) if sys.platform == "win32" else ("Helvetica", 12)
-        big = (font[0], font[1] + 2, "bold")
-        top = tk.Frame(root, bg="#ffffff", padx=18, pady=14)
-        top.pack(fill="both", expand=True)
+        fam = "Malgun Gothic" if sys.platform == "win32" else "Helvetica"
+        f_brand = (fam, 8, "bold")
+        f_title = (fam, 12, "bold")
+        f_text = (fam, 9)
+        f_num = ("Segoe UI Semibold" if sys.platform == "win32" else fam, 9)
         try:
-            img = tk.PhotoImage(file=os.path.join(HERE, "ui", "logo.png"))
-            self._img = img.subsample(max(1, img.width() // 48))
-            self._icon = img.subsample(max(1, img.width() // 32))
-            root.iconphoto(True, self._icon)
-            tk.Label(top, image=self._img, bg="#ffffff").grid(row=0, column=0, rowspan=3, sticky="n", padx=(0, 14))
+            for px in (32, 48, 64):
+                p = os.path.join(HERE, "ui", "logo_%d.png" % px)
+                if os.path.exists(p):
+                    setattr(self, "_icon%d" % px, tk.PhotoImage(file=p))
+            icons = [getattr(self, "_icon%d" % px) for px in (64, 48, 32) if hasattr(self, "_icon%d" % px)]
+            if icons:
+                root.iconphoto(True, *icons)
         except Exception:
             pass
-        self.lab_ko = tk.Label(top, text="", font=big, bg="#ffffff", anchor="w", justify="left", wraplength=360)
-        self.lab_ko.grid(row=0, column=1, sticky="w")
-        self.lab_en = tk.Label(top, text="", font=font, fg="#555555", bg="#ffffff", anchor="w", justify="left",
-                               wraplength=360)
-        self.lab_en.grid(row=1, column=1, sticky="w")
-        style = ttk.Style(root)
+
+        card = tk.Frame(root, bg=WHITE, padx=P(24), pady=P(22))
+        card.pack(fill="both", expand=True)
+        head = tk.Frame(card, bg=WHITE)
+        head.pack(fill="x")
         try:
-            style.theme_use("clam")
+            self._img = self._logo(tk, P(52))
+            if self._img:
+                tk.Label(head, image=self._img, bg=WHITE, bd=0).pack(side="left", anchor="n", padx=(0, P(16)))
         except Exception:
             pass
-        style.configure("B.Horizontal.TProgressbar", troughcolor="#e8ecef", background="#00ae42",
-                        bordercolor="#e8ecef", lightcolor="#00ae42", darkcolor="#00ae42")
-        self.bar = ttk.Progressbar(top, style="B.Horizontal.TProgressbar", length=360, mode="indeterminate")
-        self.bar.grid(row=2, column=1, sticky="we", pady=(10, 4))
-        self.lab_meta = tk.Label(top, text="", font=(font[0], font[1] - 1), fg="#777777", bg="#ffffff", anchor="w")
-        self.lab_meta.grid(row=3, column=1, sticky="w")
-        self.lab_hint = tk.Label(top, text=self.hint, font=(font[0], font[1] - 1), fg="#b45309", bg="#ffffff",
-                                 anchor="w", justify="left", wraplength=360)
-        self.lab_hint.grid(row=4, column=1, sticky="w", pady=(8, 0))
-        self.btn = tk.Button(top, text="확인 / OK", font=font, width=12, bg="#00ae42", fg="#ffffff",
-                             activebackground="#00913a", activeforeground="#ffffff", relief="flat",
-                             command=root.destroy)
+        txt = tk.Frame(head, bg=WHITE)
+        txt.pack(side="left", fill="x", expand=True)
+        tk.Label(txt, text="BAMBU FILAMENT LIBRARY", font=f_brand, fg="#00a13d", bg=WHITE, anchor="w").pack(fill="x")
+        self.lab_title = tk.Label(txt, text="", font=f_title, fg=INK, bg=WHITE, anchor="w", justify="left",
+                                  wraplength=P(330))
+        self.lab_title.pack(fill="x", pady=(P(2), 0))
+
+        self.body = tk.Frame(card, bg=WHITE)
+        self.body.pack(fill="x", pady=(P(20), 0))
+        self.bar = _PillBar(tk, self.body, P(398), max(6, P(8)))
+        self.bar.label.pack(anchor="w")
+        row = tk.Frame(self.body, bg=WHITE)
+        row.pack(fill="x", pady=(P(9), 0))
+        self.lab_status = tk.Label(row, text="", font=f_text, fg=MUTED, bg=WHITE, anchor="w")
+        self.lab_status.pack(side="left")
+        self.lab_time = tk.Label(row, text="", font=f_num, fg=SOFT, bg=WHITE, anchor="e")
+        self.lab_time.pack(side="right")
+        self.lab_pct = tk.Label(row, text="", font=f_num, fg=INK, bg=WHITE, anchor="e")
+        self.lab_pct.pack(side="right", padx=(0, P(8)))
+
+        note = tk.Frame(self.body, bg="#fff7e8", padx=P(12), pady=P(8))
+        note.pack(fill="x", pady=(P(18), 0))
+        tk.Label(note, text=self.hint, font=f_text, fg="#9a5b13", bg="#fff7e8", anchor="w", justify="left",
+                 wraplength=P(370)).pack(fill="x")
+
+        self.done_box = tk.Frame(card, bg=WHITE)
+        self.lab_msg = tk.Label(txt, text="", font=f_text, fg=MUTED, bg=WHITE, anchor="w", justify="left",
+                                wraplength=P(330))           # shown under the title when finished
+        self.btn = tk.Label(self.done_box, text="확인" if self.ko else "OK", font=(fam, 10, "bold"), fg=WHITE,
+                            bg="#00ae42", padx=P(26), pady=P(7), cursor="hand2")
+        self.btn.pack(anchor="e", pady=(P(18), 0))
+        self.btn.bind("<Enter>", lambda e: self.btn.config(bg="#00913a"))
+        self.btn.bind("<Leave>", lambda e: self.btn.config(bg="#00ae42"))
+        self.btn.bind("<Button-1>", lambda e: root.destroy())
+
         self.root, self.tk = root, tk
         self.t0 = None
         self.counts = None
-        self.spin = 0
-        self.bar.start(12)
         root.after(50, self._poll)
-        root.after(200, self._tick)
+        root.after(33, self._frame)
+        root.after(250, self._tick)
 
     def _center(self):
         r = self.root
         r.update_idletasks()
         w, h = r.winfo_reqwidth(), r.winfo_reqheight()
         r.geometry("+%d+%d" % ((r.winfo_screenwidth() - w) // 2, (r.winfo_screenheight() - h) // 3))
+
+    def _badge(self, warning):
+        """Antialiased round check (or '!') badge drawn into a PhotoImage."""
+        import math
+        n = int(round(22 * self.S))
+        img = self.tk.PhotoImage(width=n, height=n)
+        bg, fg = (255, 255, 255), ((217, 119, 6) if warning else (0, 174, 66))
+        c, rad = n / 2.0, n / 2.0 - 0.5
+        if warning:
+            segs = [((c, n * .26), (c, n * .58))]
+            dots = [(c, n * .74)]
+        else:
+            segs = [((n * .28, n * .52), (n * .43, n * .67)), ((n * .43, n * .67), (n * .73, n * .35))]
+            dots = []
+        sw = max(1.6, n * .1)
+
+        def dseg(px, py, a, b):
+            ax, ay = a
+            bx, by = b
+            vx, vy = bx - ax, by - ay
+            t = max(0.0, min(1.0, ((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy)))
+            return math.hypot(px - ax - t * vx, py - ay - t * vy)
+        rows = []
+        for y in range(n):
+            row = []
+            for x in range(n):
+                px, py = x + .5, y + .5
+                cov = max(0.0, min(1.0, rad - math.hypot(px - c, py - c) + .5))
+                d = min([dseg(px, py, a, b) for a, b in segs] + [math.hypot(px - dx, py - dy) - sw * .15 for dx, dy in dots])
+                mark = max(0.0, min(1.0, sw / 2 - d + .5))
+                col = _mix(fg, (255, 255, 255), mark)
+                row.append(_hex(_mix(bg, col, cov)))
+            rows.append("{" + " ".join(row) + "}")
+        img.put(" ".join(rows), to=(0, 0))
+        return img
 
     def _poll(self):
         import queue
@@ -216,19 +441,15 @@ class Progress:
                 op = cmd[0]
                 if op == "set":
                     _, ko, en, done, total = cmd
-                    self.lab_ko.config(text=ko)
-                    self.lab_en.config(text=en)
+                    self.lab_title.config(text=ko if self.ko else en)
                     if total:
-                        if str(self.bar["mode"]) != "determinate":
-                            self.bar.stop()
-                            self.bar.config(mode="determinate", maximum=total)
-                        self.bar["value"] = done or 0
+                        self.bar.set_mode("determinate")
+                        self.bar.set_value((done or 0) / float(total))
                         self.counts = (done or 0, total)
                     else:
-                        if str(self.bar["mode"]) != "indeterminate":
-                            self.bar.config(mode="indeterminate")
-                            self.bar.start(12)
+                        self.bar.set_mode("indeterminate")
                         self.counts = None
+                    self._status()
                 elif op == "show":
                     if self.root.state() == "withdrawn":
                         if self.t0 is None:
@@ -240,21 +461,24 @@ class Progress:
                     self.root.withdraw()
                 elif op == "finish":
                     _, ko, en, warning = cmd
-                    self.bar.stop()
-                    self.bar.grid_remove()
-                    self.lab_hint.grid_remove()
-                    self.lab_meta.grid_remove()
-                    self.lab_ko.config(text=("⚠ " if warning else "✔ ") + ko, fg="#b45309" if warning else "#087a34")
-                    self.lab_en.config(text=en)
-                    self.btn.grid(row=5, column=1, sticky="e", pady=(14, 0))
+                    self.finished = True
+                    text = ko if self.ko else en
+                    head, _, rest = text.partition("\n")
+                    self._badge_img = self._badge(warning)
+                    self.lab_title.config(text=" " + head, image=self._badge_img, compound="left",
+                                          fg="#b45309" if warning else "#1f2328")
+                    if rest:
+                        self.lab_msg.config(text=rest)
+                        self.lab_msg.pack(fill="x", pady=(int(6 * self.S), 0))
+                    self.body.pack_forget()
+                    self.done_box.pack(fill="x", pady=(int(14 * self.S), 0))
                     self.root.protocol("WM_DELETE_WINDOW", self.root.destroy)
+                    self.root.bind("<Return>", lambda e: self.root.destroy())
+                    self.root.bind("<Escape>", lambda e: self.root.destroy())
                     self._center()
                     self.root.deiconify()
                     self.root.lift()
                     self.root.focus_force()
-                    self.btn.focus_set()
-                    self.root.bind("<Return>", lambda e: self.root.destroy())
-                    self.finished = True
                 elif op == "close":
                     self.root.destroy()
                     return
@@ -262,18 +486,28 @@ class Progress:
             pass
         self.root.after(50, self._poll)
 
-    def _tick(self):
-        if getattr(self, "finished", False):
-            return
-        dots = "●○○ ○●○ ○○● ○●○".split()[self.spin % 4]
-        self.spin += 1
-        sec = int(time.time() - self.t0) if self.t0 else 0
-        meta = "%s   경과 %d초 / %d s elapsed" % (dots, sec, sec)
+    def _status(self):
         if self.counts:
             d, t = self.counts
-            meta += "   ·   %d / %d (%d%%)" % (d, t, 100 * d // max(1, t))
-        self.lab_meta.config(text=meta)
-        self.root.after(300, self._tick)
+            self.lab_status.config(text=("처리 중  %d / %d" if self.ko else "Processing  %d / %d") % (d, t))
+            self.lab_pct.config(text="%d%%" % (100 * d // max(1, t)))
+        else:
+            self.lab_status.config(text="준비 중…" if self.ko else "Preparing…")
+            self.lab_pct.config(text="")
+
+    def _frame(self):
+        if self.finished:
+            return
+        if self.root.state() != "withdrawn":
+            self.bar.step()
+        self.root.after(33, self._frame)
+
+    def _tick(self):
+        if self.finished:
+            return
+        sec = int(time.time() - self.t0) if self.t0 else 0
+        self.lab_time.config(text="%d:%02d" % (sec // 60, sec % 60))
+        self.root.after(250, self._tick)
 
 
 def _mac_notify(text):

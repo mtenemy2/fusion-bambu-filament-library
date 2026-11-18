@@ -304,8 +304,8 @@ def _run(lib, data, wait_pid, log, ui):
             win.close()
             raise
         if done is not None:
-            win.finish("완료! 썸네일 %d개의 색상을 바꿨어요. 이제 Fusion을 켜셔도 돼요." % done,
-                       "Done! %d thumbnails recolored. You can open Fusion now." % done)
+            win.finish("완료! 썸네일 %d개의 색상을 바꿨어요.\n이제 Fusion을 켜셔도 돼요." % done,
+                       "Done! %d thumbnails recolored.\nYou can open Fusion now." % done)
             return 0
         win.finish(*REOPENED, warning=True)        # wait for the next close and try again
 

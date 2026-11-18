@@ -58,15 +58,15 @@ def empty_template(lib):
     return None
 
 
-DONE = ("리셋 완료! 즐겨찾기에서 Bambu 항목을 모두 지웠어요. 이제 Fusion을 켜셔도 돼요.\n"
-        "다른 즐겨찾기는 스크립트를 다음에 실행할 때 다시 추가돼요.\n\n"
-        "Reset done! All Bambu items were removed from Favorites. You can open Fusion now.\n"
-        "Your other favorites are added back the next time you run the script.")
+DONE = ("리셋 완료! Bambu 항목을 모두 지웠어요.\n"
+        "이제 Fusion을 켜셔도 돼요. 다른 즐겨찾기는 스크립트를 다음에 실행할 때 다시 추가돼요.\n\n"
+        "Reset done! All Bambu items were removed.\n"
+        "You can open Fusion now. Your other favorites are added back the next time you run the script.")
 
 
-CANCELLED = ("리셋이 취소되었어요. 리셋이 끝나기 전에 Fusion이 다시 켜져서 아무것도 지우지 않았어요.\n"
+CANCELLED = ("리셋이 취소되었어요.\n리셋이 끝나기 전에 Fusion이 다시 켜져서 아무것도 지우지 않았어요. "
              "다시 하려면: 리셋 (모두 제거) → 리셋 예약 → Fusion 종료 → '리셋 완료' 창이 뜬 뒤 Fusion 켜기.\n\n"
-             "Reset cancelled: Fusion was opened again before the reset ran, so nothing was removed.\n"
+             "Reset cancelled.\nFusion was opened again before the reset ran, so nothing was removed. "
              "To reset: Reset (remove all) -> Schedule reset -> close Fusion -> open Fusion after the 'Reset done' box.")
 
 
